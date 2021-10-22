@@ -67,6 +67,13 @@ public class GMSDATA {
 
     }
 
+    static public List<FontItem> getFonts() {
+        return font.fonts;
+    }
+
+    static public FontItem getFont(int index) {
+        return font.getFontByIndex(index);
+    }
 
     static public DataChunk getChunkAddress(String name) {
         return chunks.get(names.indexOf(name));

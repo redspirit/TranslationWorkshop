@@ -6,7 +6,7 @@ import java.util.List;
 
 public class ChunkFONT {
 
-    private List<FontItem> fonts = new ArrayList<>();
+    public List<FontItem> fonts = new ArrayList<>();
     private List<Integer> addresses = new ArrayList<>();
     private int entries = 0;
 

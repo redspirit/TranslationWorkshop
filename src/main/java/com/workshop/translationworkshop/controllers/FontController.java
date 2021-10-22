@@ -48,9 +48,7 @@ public class FontController {
         // draw symbols
         ctx.setStroke(Paint.valueOf("#ff0000"));
         for(FontCharItem ch : font.chars) {
-
             ctx.strokeRect(ch.posX, ch.posY, ch.sizeX, ch.sizeY);
-
         }
 
 

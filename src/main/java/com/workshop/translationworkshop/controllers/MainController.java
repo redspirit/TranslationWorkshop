@@ -1,14 +1,16 @@
 package com.workshop.translationworkshop.controllers;
 
-import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.application.HostServices;
+import javafx.stage.Stage;
 
 public class MainController {
-    @FXML
-    private Label welcomeText;
 
-    @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
+    private Stage stage;
+    private HostServices hostServices;
+
+    public void onLoad(Stage stage, HostServices hs) {
+        this.stage = stage;
+        this.hostServices = hs;
     }
+
 }

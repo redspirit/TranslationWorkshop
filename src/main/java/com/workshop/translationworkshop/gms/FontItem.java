@@ -1,11 +1,15 @@
 package com.workshop.translationworkshop.gms;
 
+import com.workshop.translationworkshop.Application;
+import com.workshop.translationworkshop.utils.Glyph;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontSmoothingType;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -21,6 +25,8 @@ public class FontItem {
     public float scaleX, scaleY;
     public int charsCount;
     public List<FontCharItem> chars = new ArrayList<>();
+    private Image cachedSprite = null;
+    public int glyphHeight = 0;
 
     public FontItem(ByteBuffer buffer, int start) {
 
@@ -61,8 +67,9 @@ public class FontItem {
             ch.sizeY = buffer.getShort();
             ch.shift = buffer.getShort();
             ch.offset = buffer.getInt();
-
             chars.add(ch);
+
+            glyphHeight = ch.sizeY;
 
         }
 
@@ -83,33 +90,46 @@ public class FontItem {
 
     public void getImageByString(String text, Canvas canvas) {
 
-        Image sprite = getSprite();
-        int gap = 1;
+        if(cachedSprite == null) {
+            cachedSprite = getSprite();
+        }
+
         int textWidth = 5;
         int textHeight = 0;
+        float scale = 2;
 
-//        Canvas canvas = new Canvas();
         GraphicsContext ctx = canvas.getGraphicsContext2D();
 
-        canvas.setHeight(50);
-        canvas.setWidth(300);
+        canvas.setHeight(128);
+        canvas.setWidth(512);
 
         ctx.setImageSmoothing(false);
         ctx.setFill(Paint.valueOf("#00587a"));
-        ctx.fillRect(0,0, 300, 50);
+        ctx.fillRect(0,0, 512, 128);
 
         for (int i = 0; i < text.length(); i++) {
             char ch = text.charAt(i);
 
-            FontCharItem charItem = getFontCharByCode((int) ch);
+            FontCharItem charItem = getFontCharByCode(ch);
 
-//            ctx.drawImage(sprite, textWidth + 1, 1, charItem.sizeX, charItem.sizeY, charItem.posX, charItem.posY, charItem.sizeX, charItem.sizeY);
-            ctx.drawImage(sprite, charItem.posX, charItem.posY, charItem.sizeX, charItem.sizeY, textWidth, 1, charItem.sizeX, charItem.sizeY);
+            if(charItem == null) {
+                continue; // символ, который не смогли найти - пропускаем
+            }
+
+            ctx.drawImage(cachedSprite,
+                    charItem.posX, charItem.posY,
+                    charItem.sizeX, charItem.sizeY,
+                    textWidth * scale, 0,
+                    charItem.sizeX * scale, charItem.sizeY * scale
+            );
 
             textWidth += charItem.shift;
             textHeight = charItem.sizeY;
 
         }
+
+        canvas.setHeight(textHeight * scale);
+        canvas.setWidth(textWidth * scale + 3);
 
     };
 

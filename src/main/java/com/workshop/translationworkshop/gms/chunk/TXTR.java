@@ -2,35 +2,35 @@ package com.workshop.translationworkshop.gms.chunk;
 
 import com.workshop.translationworkshop.gms.DataChunk;
 import com.workshop.translationworkshop.gms.Texture;
-
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TXTR {
 
+    private final DataChunk chunk;
     private List<Integer> addresses = new ArrayList<>();
     public List<Texture> textures = new ArrayList<>();
     public int entries = 0;
 
-    public TXTR(ByteBuffer buffer, DataChunk chunk) {
+    public TXTR(DataChunk chunk) {
 
-        buffer.position(chunk.startAddress);
+        this.chunk = chunk;
+        chunk.buffer.position(chunk.startAddress);
 
-        entries = buffer.getInt();
+        entries = chunk.buffer.getInt();
 
         for(int i = 0; i < entries; i++) {
-            addresses.add(buffer.getInt());
+            addresses.add(chunk.buffer.getInt());
         }
 
         for(int i = 0; i < entries; i++) {
-            buffer.position(addresses.get(i));
+            chunk.buffer.position(addresses.get(i));
 
             Texture t = new Texture();
-            t.scaled = buffer.getInt();
-            t.generatedMips = buffer.getInt();
-            t.pngPointer = buffer.getInt();
-            t.loadPng(buffer);
+            t.scaled = chunk.buffer.getInt();
+            t.generatedMips = chunk.buffer.getInt();
+            t.pngPointer = chunk.buffer.getInt();
+            t.loadPng(chunk.buffer);
             textures.add(t);
 
         }

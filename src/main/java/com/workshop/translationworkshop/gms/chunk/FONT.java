@@ -9,22 +9,24 @@ import java.util.List;
 
 public class FONT {
 
+    private final DataChunk chunk;
     public List<FontItem> fonts = new ArrayList<>();
     private List<Integer> addresses = new ArrayList<>();
     private int entries = 0;
 
-    public FONT(ByteBuffer buffer, DataChunk chunk) {
+    public FONT(DataChunk chunk) {
 
-        buffer.position(chunk.startAddress);
+        this.chunk = chunk;
+        chunk.buffer.position(chunk.startAddress);
 
-        entries = buffer.getInt(); // кол-во шрифтов
+        entries = chunk.buffer.getInt(); // кол-во шрифтов
 
         for(int i = 0; i < entries; i++) {
-            addresses.add(buffer.getInt());
+            addresses.add(chunk.buffer.getInt());
         }
 
         for(int i = 0; i < entries; i++) {
-            fonts.add(new FontItem(buffer, addresses.get(i)));
+            fonts.add(new FontItem(chunk.buffer, addresses.get(i)));
         }
 
     }

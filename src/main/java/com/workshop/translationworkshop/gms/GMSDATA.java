@@ -1,10 +1,6 @@
 package com.workshop.translationworkshop.gms;
 
-import com.workshop.translationworkshop.gms.chunk.TXTR;
-import com.workshop.translationworkshop.gms.chunk.TPAG;
-import com.workshop.translationworkshop.gms.chunk.STRG;
-import com.workshop.translationworkshop.gms.chunk.FONT;
-
+import com.workshop.translationworkshop.gms.chunk.*;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -22,10 +18,32 @@ public class GMSDATA {
     private static List<String> names = new ArrayList<>();
     private static List<DataChunk> chunks = new ArrayList<>();
 
-    public static STRG strg;
+    public static GEN8 gen8;
+    public static OPTN optn;
+    public static LANG lang;
+    public static EXTN extn;
+    public static SOND sond;
+    public static AGRP agrp;
+    public static SPRT sprt;
+    public static BGND bgnd;
+    public static PATH path;
+    public static SCPT scpt;
+    public static GLOB glob;
+    public static SHDR shdr;
     public static FONT font;
+    public static TMLN tmln;
+    public static OBJT objt;
+    public static ACRV acrv;
+    public static SEQN seqn;
+    public static TAGS tags;
+    public static ROOM room;
+    public static DAFL dafl;
+    public static EMBI embi;
     public static TPAG tpag;
+    public static TGIN tgin;
+    public static STRG strg;
     public static TXTR txtr;
+    public static AUDO audo;
 
     static public boolean loadFile(String path) {
 
@@ -57,17 +75,19 @@ public class GMSDATA {
             System.out.println(name + " = " + chunkLen);
 
             names.add(name);
-            chunks.add( new DataChunk(name, i + 4, chunkLen) );
+            chunks.add( new DataChunk(name, buffer,i + 4, chunkLen) );
 
             i = chunkLen + i + 4;
 
         }
 
-        strg = new STRG(buffer, getChunkAddress("STRG"));
-        font = new FONT(buffer, getChunkAddress("FONT"));
-        tpag = new TPAG(buffer, getChunkAddress("TPAG"));
-        txtr = new TXTR(buffer, getChunkAddress("TXTR"));
+        strg = new STRG(getChunkAddress("STRG"));
+        gen8 = new GEN8(getChunkAddress("GEN8"));
+        font = new FONT(getChunkAddress("FONT"));
+        tpag = new TPAG(getChunkAddress("TPAG"));
+        txtr = new TXTR(getChunkAddress("TXTR"));
 
+        
         return true;
 
     }

@@ -11,33 +11,35 @@ import java.util.List;
 
 public class TPAG {
 
+    private final DataChunk chunk;
     private List<Integer> addresses = new ArrayList<>();
     private List<TexturePage> pages = new ArrayList<>();
     public int entries = 0;
 
-    public TPAG(ByteBuffer buffer, DataChunk chunk) {
+    public TPAG( DataChunk chunk) {
 
-        buffer.position(chunk.startAddress);
+        this.chunk = chunk;
+        chunk.buffer.position(chunk.startAddress);
 
-        entries = buffer.getInt();
+        entries = chunk.buffer.getInt();
 
         for(int i = 0; i < entries; i++) {
-            addresses.add(buffer.getInt());
+            addresses.add(chunk.buffer.getInt());
         }
 
         for(int i = 0; i < entries; i++) {
-            buffer.position(addresses.get(i));
+            chunk.buffer.position(addresses.get(i));
 
             SpriteRect source = new SpriteRect(
-                    new SpritePoint(buffer.getShort(), buffer.getShort()),
-                    new SpritePoint(buffer.getShort(), buffer.getShort())
+                    new SpritePoint(chunk.buffer.getShort(), chunk.buffer.getShort()),
+                    new SpritePoint(chunk.buffer.getShort(), chunk.buffer.getShort())
             );
             SpriteRect target = new SpriteRect(
-                    new SpritePoint(buffer.getShort(), buffer.getShort()),
-                    new SpritePoint(buffer.getShort(), buffer.getShort())
+                    new SpritePoint(chunk.buffer.getShort(), chunk.buffer.getShort()),
+                    new SpritePoint(chunk.buffer.getShort(), chunk.buffer.getShort())
             );
-            SpritePoint size = new SpritePoint(buffer.getShort(), buffer.getShort());
-            short index = buffer.getShort();
+            SpritePoint size = new SpritePoint(chunk.buffer.getShort(), chunk.buffer.getShort());
+            short index = chunk.buffer.getShort();
 
             pages.add(new TexturePage(source, target, size, index));
 

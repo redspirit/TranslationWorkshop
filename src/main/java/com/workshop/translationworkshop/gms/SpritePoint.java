@@ -6,6 +6,10 @@ public class SpritePoint {
         this.x = x;
         this.y = y;
     }
+    public SpritePoint(int x, int y) {
+        this.x = (short) x;
+        this.y = (short) y;
+    }
     public String toString() {
         return "(" + x + "," + y + ")";
     }

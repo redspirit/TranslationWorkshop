@@ -10,5 +10,6 @@ public class FontCharItem {
     public short sizeY;
     public short shift;
     public int offset;
+    public boolean isCustom = false;
 
 }

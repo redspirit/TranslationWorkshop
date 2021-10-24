@@ -14,6 +14,7 @@ import javafx.scene.text.FontSmoothingType;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FontItem {
 
@@ -27,6 +28,11 @@ public class FontItem {
     public List<FontCharItem> chars = new ArrayList<>();
     private Image cachedSprite = null;
     public int glyphHeight = 0;
+
+    public float customScaleX = 1;
+    public float customScaleY = 1;
+    public float customOffsetY = 0;
+    public int charSpace = 0;
 
     public FontItem(ByteBuffer buffer, int start) {
 
@@ -76,8 +82,11 @@ public class FontItem {
     }
 
     public Image getSprite() {
-        TexturePage page = GMSDATA.tpag.getByAddress(pagePointer);
-        return page.getImage();
+        return getTexturePage().getImage();
+    }
+
+    public void restoreSprite() {
+        getTexturePage().clearCache();
     }
 
     public TexturePage getTexturePage() {
@@ -88,7 +97,7 @@ public class FontItem {
         return chars.stream().filter(it -> it.code == code).findFirst().orElse(null);
     }
 
-    public void getImageByString(String text, Canvas canvas) {
+    public void getImageByString(String text, Canvas canvas, double scale) {
 
         if(cachedSprite == null) {
             cachedSprite = getSprite();
@@ -96,16 +105,15 @@ public class FontItem {
 
         int textWidth = 5;
         int textHeight = 0;
-        float scale = 2;
 
         GraphicsContext ctx = canvas.getGraphicsContext2D();
 
-        canvas.setHeight(128);
+        canvas.setHeight(glyphHeight * scale);
         canvas.setWidth(512);
 
         ctx.setImageSmoothing(false);
-        ctx.setFill(Paint.valueOf("#00587a"));
-        ctx.fillRect(0,0, 512, 128);
+        ctx.setFill(Paint.valueOf("#000000"));
+        ctx.fillRect(0,0, 512, glyphHeight * scale);
 
         for (int i = 0; i < text.length(); i++) {
             char ch = text.charAt(i);
@@ -132,6 +140,95 @@ public class FontItem {
         canvas.setWidth(textWidth * scale + 3);
 
     };
+
+    public void clearAllCustomChars() {
+        chars = chars.stream().filter(it -> !it.isCustom).collect(Collectors.toList());
+    }
+
+    public FontCharItem getLastCharItem() {
+
+        int maxY = 0;
+        int maxX = 0;
+        FontCharItem match = null;
+
+        for(FontCharItem ch : chars) {
+            if(ch.posY > maxY) maxY = ch.posY;
+        }
+
+        for(FontCharItem ch : chars) {
+            if(ch.posY == maxY && ch.posX > maxX) {
+                maxX = ch.posX;
+                match = ch;
+            }
+        }
+
+        return match;
+
+    }
+
+    private SpritePoint findInsertPlace(int charWidth) {
+        TexturePage page = getTexturePage();
+        FontCharItem lastChar = getLastCharItem();
+
+        int newX = lastChar.posX + lastChar.sizeX + 2;
+        int newY = lastChar.posY + lastChar.sizeY + 2;
+        if(newX + charWidth > page.size.x) {
+            // символ не влазиет в текущую строку, может есть место пониже?
+
+            if(newY + glyphHeight > page.size.y) {
+                // на спрайте уже совсем нет места
+                return null;
+            } else {
+                return new SpritePoint(2, newY);
+            }
+
+        } else {
+            // для нового символа нашлость подходящее местечко
+            return new SpritePoint(newX, lastChar.posY);
+        }
+
+    }
+
+    public boolean addNewChar(Font font, char sym) {
+
+        Glyph g = new Glyph(font);
+        g.setParams(customScaleX, customScaleY, customOffsetY);
+        Image img = g.getCharImage(Character.toString(sym), glyphHeight);
+        SpritePoint newPos = findInsertPlace((int) img.getWidth());
+
+        if(newPos == null) {
+            // нет места, надо расширяться
+            return false;
+        }
+
+        FontCharItem ch = new FontCharItem();
+        ch.code = (short) sym;
+        ch.letter = Character.toString(sym);
+        ch.posX = newPos.x;
+        ch.posY = newPos.y;
+        ch.sizeX = (short) img.getWidth();
+        ch.sizeY = (short) glyphHeight;
+        ch.shift = (short) (ch.sizeX + charSpace);
+        ch.offset = 0;
+        ch.isCustom = true;
+        chars.add(ch);
+
+        TexturePage page = getTexturePage();
+        page.drawImage(img, ch);
+
+        return true;
+    }
+
+    public void addNewChars(Font font, String str) {
+
+        for (int i = 0; i < str.length(); i++) {
+            boolean res = addNewChar(font, str.charAt(i));
+            if(!res) {
+
+            }
+        }
+
+    }
 
     public String toString() {
         return name;

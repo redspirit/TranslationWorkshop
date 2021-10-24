@@ -11,10 +11,19 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.embed.swing.SwingFXUtils;
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageOutputStream;
+import java.awt.image.RenderedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 
 public class CharsWizardController {
 
@@ -41,7 +50,7 @@ public class CharsWizardController {
         localizeFont = Glyph.getFont("Alegreya.ttf");
 
         drawImage();
-        onSampleTextChange(null);
+//        onSampleTextChange(null);
     }
 
     public void drawImage() {
@@ -74,11 +83,37 @@ public class CharsWizardController {
     public void onApplyButton(ActionEvent actionEvent) {
 
         font.restoreSprite();
-
         font.clearAllCustomChars();
+
+        font.customScaleX = sliderWidthView.getValue() / 100;
+        font.customScaleY = sliderHeightView.getValue() / 100;;
+        font.customOffsetY = sliderOffsetView.getValue() / 100;
+
+        System.out.println("customScaleX=" + font.customScaleX);
+        System.out.println("customScaleY=" + font.customScaleY);
+        System.out.println("customOffsetY=" + font.customOffsetY);
+
+
         font.addNewChars(localizeFont, charsetTextView.getText());
 
         drawImage();
+        onSampleTextChange(null);
+
+
+        RenderedImage renderedImage = SwingFXUtils.fromFXImage(font.getSprite(), null);
+        try {
+
+            ByteArrayOutputStream ios = new ByteArrayOutputStream();
+            ImageIO.write(renderedImage, "png", ios);
+
+            System.out.println( ios.toByteArray().length  );
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
 
     }
 }

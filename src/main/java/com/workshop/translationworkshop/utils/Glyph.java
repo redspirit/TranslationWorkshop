@@ -22,9 +22,9 @@ public class Glyph {
     private Font font;
     public int localWidth, localHeight;
 
-    private float customScaleX = 1;
-    private float customScaleY = 1;
-    private float customOffsetY = 0;
+    private double customScaleX = 1;
+    private double customScaleY = 1;
+    private double customOffsetY = 0;
 
     static public Font getFont(String fontFileName) {
         return Font.loadFont(Application.class.getResource("fonts/" + fontFileName).toExternalForm(), 72);
@@ -43,7 +43,7 @@ public class Glyph {
 
     }
 
-    public void setParams(float customScaleX, float customScaleY, float customOffsetY) {
+    public void setParams(double customScaleX, double customScaleY, double customOffsetY) {
         this.customScaleX = customScaleX;
         this.customScaleY = customScaleY;
         this.customOffsetY = customOffsetY;
@@ -60,11 +60,9 @@ public class Glyph {
 
     public WritableImage getCharImage(String ch, int size) {
         SpritePoint sizes = textSizes(ch);
-        double ratio = (size + 10) / (double)sizes.y;
+        double ratio = (size / (double)sizes.y) * customScaleX;
         localWidth = (int)Math.round(ratio * sizes.x);
         localHeight = size;
-
-//        System.out.println("Glyph size: " + newWidth + " " + newHeight );
 
         Canvas cnv2 = new Canvas(localWidth, localHeight);
         GraphicsContext gc = cnv2.getGraphicsContext2D();
@@ -73,12 +71,14 @@ public class Glyph {
         canvas.setWidth(sizes.x);
         canvas.setHeight(sizes.y);
 
-        ctx.fillText(ch, 0,0);
+        ctx.fillText(ch, 0, customOffsetY * localHeight);
+
+        double hOff = sizes.y * customScaleY;
 
         gc.drawImage(
                 canvasToImage(canvas),
-                0, 0,
-                sizes.x, sizes.y,
+                0, hOff,
+                sizes.x, sizes.y - hOff,
                 0, 0,
                 localWidth, localHeight
         );

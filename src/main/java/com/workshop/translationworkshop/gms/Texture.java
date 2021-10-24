@@ -35,6 +35,12 @@ public class Texture {
         return image;
     }
 
+    public void createNew(Image img) {
+
+        // todo png images to bytes;
+
+    }
+
     public String toString() {
         return "scaled="+scaled+" generatedMips="+generatedMips+" png="+pngPointer;
     }

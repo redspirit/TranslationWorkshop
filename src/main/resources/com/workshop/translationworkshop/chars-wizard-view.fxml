@@ -24,10 +24,10 @@
                      </content>
                   </ScrollPane>
                   <TextArea fx:id="charsetTextView" layoutX="14.0" layoutY="31.0" prefHeight="51.0" prefWidth="422.0" text="абвгдежзийклмнопрстуфхцчшщъыьэюяабвгдежзийклмнопрстуфхцчшщъыьэюяАБВГДЕЖЗИйКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" wrapText="true" />
-                  <Slider fx:id="sliderHeightView" layoutX="458.0" layoutY="31.0" min="-100.0" prefHeight="16.0" prefWidth="145.0" AnchorPane.rightAnchor="27.0" AnchorPane.topAnchor="31.0" />
-                  <Slider fx:id="sliderWidthView" layoutX="461.0" layoutY="31.0" min="-100.0" AnchorPane.rightAnchor="185.0" AnchorPane.topAnchor="31.0" />
-                  <Slider fx:id="sliderOffsetView" layoutX="461.0" layoutY="66.0" min="-100.0" AnchorPane.rightAnchor="185.0" AnchorPane.topAnchor="66.0" />
-                  <TextField fx:id="sampleTextView" layoutX="442.0" layoutY="104.0" onKeyTyped="#onSampleTextChange" prefHeight="26.0" prefWidth="328.0" text="Hello World" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="104.0" />
+                  <Slider fx:id="sliderHeightView" layoutX="458.0" layoutY="31.0" max="50.0" min="-50.0" prefHeight="16.0" prefWidth="145.0" value="11.0" AnchorPane.rightAnchor="27.0" AnchorPane.topAnchor="31.0" />
+                  <Slider fx:id="sliderWidthView" layoutX="461.0" layoutY="31.0" max="150.0" min="50.0" value="132.0" AnchorPane.rightAnchor="185.0" AnchorPane.topAnchor="31.0" />
+                  <Slider fx:id="sliderOffsetView" layoutX="461.0" layoutY="66.0" max="50.0" min="-50.0" value="14.0" AnchorPane.rightAnchor="185.0" AnchorPane.topAnchor="66.0" />
+                  <TextField fx:id="sampleTextView" layoutX="442.0" layoutY="104.0" onKeyTyped="#onSampleTextChange" prefHeight="26.0" prefWidth="328.0" text="Hello World ПРИВЕТ 123" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="104.0" />
                   <ScrollPane layoutX="442.0" layoutY="141.0" prefHeight="63.0" prefWidth="326.0" AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="141.0">
                      <content>
                         <Canvas fx:id="sampleCanvasView" height="57.0" width="299.0" />

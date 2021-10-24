@@ -26,12 +26,11 @@ public class FontItem {
     public float scaleX, scaleY;
     public int charsCount;
     public List<FontCharItem> chars = new ArrayList<>();
-    private Image cachedSprite = null;
     public int glyphHeight = 0;
 
-    public float customScaleX = 1;
-    public float customScaleY = 1;
-    public float customOffsetY = 0;
+    public double customScaleX = 1;
+    public double customScaleY = 1;
+    public double customOffsetY = 0;
     public int charSpace = 0;
 
     public FontItem(ByteBuffer buffer, int start) {
@@ -99,10 +98,6 @@ public class FontItem {
 
     public void getImageByString(String text, Canvas canvas, double scale) {
 
-        if(cachedSprite == null) {
-            cachedSprite = getSprite();
-        }
-
         int textWidth = 5;
         int textHeight = 0;
 
@@ -124,7 +119,8 @@ public class FontItem {
                 continue; // символ, который не смогли найти - пропускаем
             }
 
-            ctx.drawImage(cachedSprite,
+            ctx.drawImage(
+                    getSprite(),
                     charItem.posX, charItem.posY,
                     charItem.sizeX, charItem.sizeY,
                     textWidth * scale, 0,
@@ -196,10 +192,7 @@ public class FontItem {
         Image img = g.getCharImage(Character.toString(sym), glyphHeight);
         SpritePoint newPos = findInsertPlace((int) img.getWidth());
 
-        if(newPos == null) {
-            // нет места, надо расширяться
-            return false;
-        }
+        if(newPos == null) return false;
 
         FontCharItem ch = new FontCharItem();
         ch.code = (short) sym;
@@ -224,7 +217,9 @@ public class FontItem {
         for (int i = 0; i < str.length(); i++) {
             boolean res = addNewChar(font, str.charAt(i));
             if(!res) {
-
+                getTexturePage().extendSprite();
+                addNewChars(font, str);
+                break;
             }
         }
 

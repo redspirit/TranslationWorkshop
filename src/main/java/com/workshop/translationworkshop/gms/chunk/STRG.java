@@ -1,17 +1,19 @@
-package com.workshop.translationworkshop.gms;
+package com.workshop.translationworkshop.gms.chunk;
+
+import com.workshop.translationworkshop.gms.DataChunk;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChunkSTRG {
+public class STRG extends DataChunk {
 
     private List<String> values = new ArrayList<>();
     private List<Integer> addresses = new ArrayList<>();
     public int entries = 0;
 
-    public ChunkSTRG(ByteBuffer buffer, DataChunk chunk) {
+    public STRG(ByteBuffer buffer, DataChunk chunk) {
 
         buffer.position(chunk.startAddress);
 

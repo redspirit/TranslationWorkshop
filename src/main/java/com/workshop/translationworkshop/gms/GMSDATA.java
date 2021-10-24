@@ -1,5 +1,10 @@
 package com.workshop.translationworkshop.gms;
 
+import com.workshop.translationworkshop.gms.chunk.TXTR;
+import com.workshop.translationworkshop.gms.chunk.TPAG;
+import com.workshop.translationworkshop.gms.chunk.STRG;
+import com.workshop.translationworkshop.gms.chunk.FONT;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -17,10 +22,10 @@ public class GMSDATA {
     private static List<String> names = new ArrayList<>();
     private static List<DataChunk> chunks = new ArrayList<>();
 
-    public static ChunkSTRG strg;
-    public static ChunkFONT font;
-    public static ChunkTPAG tpag;
-    public static ChunkTXTR txtr;
+    public static STRG strg;
+    public static FONT font;
+    public static TPAG tpag;
+    public static TXTR txtr;
 
     static public boolean loadFile(String path) {
 
@@ -49,7 +54,7 @@ public class GMSDATA {
             i += 4;
 
             int chunkLen = buffer.getInt(i);
-//            System.out.println(name + " = " + chunkLen);
+            System.out.println(name + " = " + chunkLen);
 
             names.add(name);
             chunks.add( new DataChunk(name, i + 4, chunkLen) );
@@ -58,10 +63,10 @@ public class GMSDATA {
 
         }
 
-        strg = new ChunkSTRG(buffer, getChunkAddress("STRG"));
-        font = new ChunkFONT(buffer, getChunkAddress("FONT"));
-        tpag = new ChunkTPAG(buffer, getChunkAddress("TPAG"));
-        txtr = new ChunkTXTR(buffer, getChunkAddress("TXTR"));
+        strg = new STRG(buffer, getChunkAddress("STRG"));
+        font = new FONT(buffer, getChunkAddress("FONT"));
+        tpag = new TPAG(buffer, getChunkAddress("TPAG"));
+        txtr = new TXTR(buffer, getChunkAddress("TXTR"));
 
         return true;
 

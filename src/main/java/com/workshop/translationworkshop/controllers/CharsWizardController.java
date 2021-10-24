@@ -113,6 +113,10 @@ public class CharsWizardController {
         }
 
 
+    }
+
+    public void onSaveButton(ActionEvent actionEvent) {
+
 
 
     }

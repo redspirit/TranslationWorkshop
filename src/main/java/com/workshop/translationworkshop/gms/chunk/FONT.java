@@ -1,16 +1,19 @@
-package com.workshop.translationworkshop.gms;
+package com.workshop.translationworkshop.gms.chunk;
+
+import com.workshop.translationworkshop.gms.DataChunk;
+import com.workshop.translationworkshop.gms.FontItem;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChunkFONT {
+public class FONT {
 
     public List<FontItem> fonts = new ArrayList<>();
     private List<Integer> addresses = new ArrayList<>();
     private int entries = 0;
 
-    public ChunkFONT(ByteBuffer buffer, DataChunk chunk) {
+    public FONT(ByteBuffer buffer, DataChunk chunk) {
 
         buffer.position(chunk.startAddress);
 

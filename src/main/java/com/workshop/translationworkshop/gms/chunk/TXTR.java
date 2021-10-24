@@ -1,16 +1,19 @@
-package com.workshop.translationworkshop.gms;
+package com.workshop.translationworkshop.gms.chunk;
+
+import com.workshop.translationworkshop.gms.DataChunk;
+import com.workshop.translationworkshop.gms.Texture;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChunkTXTR {
+public class TXTR {
 
     private List<Integer> addresses = new ArrayList<>();
     public List<Texture> textures = new ArrayList<>();
     public int entries = 0;
 
-    public ChunkTXTR(ByteBuffer buffer, DataChunk chunk) {
+    public TXTR(ByteBuffer buffer, DataChunk chunk) {
 
         buffer.position(chunk.startAddress);
 

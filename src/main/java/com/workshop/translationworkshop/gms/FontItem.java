@@ -2,6 +2,7 @@ package com.workshop.translationworkshop.gms;
 
 import com.workshop.translationworkshop.Application;
 import com.workshop.translationworkshop.utils.Glyph;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -11,6 +12,10 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontSmoothingType;
 
+import javax.imageio.ImageIO;
+import java.awt.image.RenderedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -217,10 +222,26 @@ public class FontItem {
         for (int i = 0; i < str.length(); i++) {
             boolean res = addNewChar(font, str.charAt(i));
             if(!res) {
-                getTexturePage().extendSprite();
-                addNewChars(font, str);
+//                getTexturePage().extendSprite();
+//                addNewChars(font, str);
                 break;
             }
+        }
+
+    }
+
+    public byte[] getSpritePngData() {
+
+        RenderedImage renderedImage = SwingFXUtils.fromFXImage(getSprite(), null);
+        try {
+
+            ByteArrayOutputStream ios = new ByteArrayOutputStream();
+            ImageIO.write(renderedImage, "png", ios);
+            return ios.toByteArray();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
 
     }

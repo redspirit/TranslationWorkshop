@@ -1,16 +1,21 @@
-package com.workshop.translationworkshop.gms;
+package com.workshop.translationworkshop.gms.chunk;
+
+import com.workshop.translationworkshop.gms.DataChunk;
+import com.workshop.translationworkshop.gms.SpritePoint;
+import com.workshop.translationworkshop.gms.SpriteRect;
+import com.workshop.translationworkshop.gms.TexturePage;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChunkTPAG {
+public class TPAG {
 
     private List<Integer> addresses = new ArrayList<>();
     private List<TexturePage> pages = new ArrayList<>();
     public int entries = 0;
 
-    public ChunkTPAG(ByteBuffer buffer, DataChunk chunk) {
+    public TPAG(ByteBuffer buffer, DataChunk chunk) {
 
         buffer.position(chunk.startAddress);
 

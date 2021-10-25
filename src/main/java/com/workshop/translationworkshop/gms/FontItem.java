@@ -2,6 +2,7 @@ package com.workshop.translationworkshop.gms;
 
 import com.workshop.translationworkshop.Application;
 import com.workshop.translationworkshop.utils.Glyph;
+import com.workshop.translationworkshop.utils.Utils;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -267,6 +268,9 @@ public class FontItem {
     public ByteBuffer toBytes() {
 
         int len = (12 * 4) + (charsCount * 4) + (charsCount * 16);
+
+        System.out.println(len);
+
         ByteBuffer bb = ByteBuffer.allocate(len);
 
         return bb;

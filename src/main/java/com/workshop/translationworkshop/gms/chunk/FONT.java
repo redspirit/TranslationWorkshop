@@ -46,7 +46,7 @@ public class FONT {
 
 
     public ByteBuffer toBytes() {
-        // переводим все объекты чанка в чистые байты для последующей склейки
+        // сдесь надо собрать массив адресов НА ЧТО могут ссылаться из других мест
 
 
 //        chunk.name.getBytes(StandardCharsets.UTF_8);

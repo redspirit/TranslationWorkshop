@@ -5,6 +5,7 @@ import com.workshop.translationworkshop.gms.FontCharItem;
 import com.workshop.translationworkshop.gms.FontItem;
 import com.workshop.translationworkshop.gms.GMSDATA;
 import com.workshop.translationworkshop.utils.Glyph;
+import com.workshop.translationworkshop.utils.Utils;
 import javafx.application.HostServices;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -39,14 +40,15 @@ public class MainController {
 
 //        GMSDATA.loadFile("/home/spirit/hard/TEST/data.win");
 //        GMSDATA.loadFile("/Users/spirit/Documents/Garden Story v1.0.3/data.win");
-//        GMSDATA.loadFile("/Users/spirit/Documents/data.win");     // DG mac
-        GMSDATA.loadFile("D:\\games\\Deaths Gambit Afterlife/data.win");   // DG PC
+        GMSDATA.loadFile("/Users/spirit/Documents/data.win");     // DG mac
+//        GMSDATA.loadFile("D:\\games\\Deaths Gambit Afterlife/data.win");   // DG PC
 
         fontListView.getItems().setAll(GMSDATA.getFonts());
         fontListView.getSelectionModel().select(0);
         currentFont = fontListView.getItems().get(0);
 
-        GMSDATA.font.toBytes();
+//        GMSDATA.font.toBytes();
+
 
     }
 

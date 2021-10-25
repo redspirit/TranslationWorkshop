@@ -23,7 +23,7 @@
                         <Canvas fx:id="canvasCharSheetView" height="329.0" width="397.0" />
                      </content>
                   </ScrollPane>
-                  <TextArea fx:id="charsetTextView" layoutX="14.0" layoutY="31.0" prefHeight="51.0" prefWidth="422.0" text="абвгдежзийклмнопрстуфхцчшщъыьэюяабвгдежзийклмнопрстуфхцчшщъыьэюяАБВГДЕЖЗИйКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" wrapText="true" />
+                  <TextArea fx:id="charsetTextView" layoutX="14.0" layoutY="31.0" prefHeight="51.0" prefWidth="422.0" text="абвгдежзийклмнопрстуфхцчшщъыьэюяабвгдежзийклмнопрстуфхцчшщъыьэюяАБВГДЕЖЗИйКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" wrapText="true" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="350.0" AnchorPane.topAnchor="31.0" />
                   <Slider fx:id="sliderHeightView" layoutX="458.0" layoutY="31.0" max="50.0" min="-50.0" prefHeight="16.0" prefWidth="145.0" value="11.0" AnchorPane.rightAnchor="27.0" AnchorPane.topAnchor="31.0" />
                   <Slider fx:id="sliderWidthView" layoutX="461.0" layoutY="31.0" max="150.0" min="50.0" value="132.0" AnchorPane.rightAnchor="185.0" AnchorPane.topAnchor="31.0" />
                   <Slider fx:id="sliderOffsetView" layoutX="461.0" layoutY="66.0" max="50.0" min="-50.0" value="14.0" AnchorPane.rightAnchor="185.0" AnchorPane.topAnchor="66.0" />
@@ -34,7 +34,8 @@
                      </content>
                   </ScrollPane>
                   <Button layoutX="629.0" layoutY="61.0" mnemonicParsing="false" onAction="#onApplyButton" prefHeight="26.0" prefWidth="117.0" text="Apply" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="61.0" />
-                  <Button layoutX="546.0" layoutY="235.0" mnemonicParsing="false" onAction="#onSaveButton" prefHeight="26.0" prefWidth="120.0" text="Save" />
+                  <Button layoutX="652.0" layoutY="409.0" mnemonicParsing="false" onAction="#onSaveButton" prefHeight="26.0" prefWidth="124.0" text="Save as PNG" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                  <TextField fx:id="textCharInfoView" layoutX="443.0" layoutY="213.0" prefHeight="25.0" prefWidth="324.0" AnchorPane.rightAnchor="19.0" AnchorPane.topAnchor="213.0" />
                </children>
             </AnchorPane>
       </content>

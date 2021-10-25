@@ -3,7 +3,9 @@ package com.workshop.translationworkshop.gms.chunk;
 import com.workshop.translationworkshop.gms.DataChunk;
 import com.workshop.translationworkshop.gms.FontItem;
 
+import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,5 +43,25 @@ public class FONT {
         if(index > entries - 1) return null;
         return fonts.get(index);
     };
+
+
+    public ByteBuffer toBytes() {
+        // переводим все объекты чанка в чистые байты для последующей склейки
+
+
+//        chunk.name.getBytes(StandardCharsets.UTF_8);
+
+        int len = 4 + (addresses.size() * 4);
+        for(FontItem it : fonts) {
+            len = len + it.toBytes().capacity();
+        }
+
+        int need = 34760;
+        System.out.println("FONTLEN " + len + " OFFSET=" + (need - len));
+
+        ByteBuffer bb = ByteBuffer.allocate(len);
+
+        return bb;
+    }
 
 }

@@ -15,6 +15,7 @@ import javafx.scene.text.FontSmoothingType;
 import javax.imageio.ImageIO;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -246,8 +247,29 @@ public class FontItem {
 
     }
 
+    public void savePngToFile(String filename) throws IOException {
+
+        RenderedImage renderedImage = SwingFXUtils.fromFXImage(getSprite(), null);
+        ImageIO.write(renderedImage, "png", new File(filename));
+
+    }
+
+    public FontCharItem getCharItemByPosition(int x, int y) {
+
+        return chars.stream().filter(item -> (x >= item.posX && x <= item.posX + item.sizeX) && (y >= item.posY && y <= item.posY + item.sizeY)).findFirst().orElse(null);
+
+    }
+
     public String toString() {
         return name;
+    }
+
+    public ByteBuffer toBytes() {
+
+        int len = (12 * 4) + (charsCount * 4) + (charsCount * 16);
+        ByteBuffer bb = ByteBuffer.allocate(len);
+
+        return bb;
     }
 
 }

@@ -35,15 +35,20 @@ public class CharsWizardController {
     public Slider sliderWidthView;
     public Slider sliderHeightView;
     public Canvas sampleCanvasView;
+    public TextField textCharInfoView;
     private FontItem font;
     private Font localizeFont;
 
     public void ViewLoaded(FontItem font) {
 
-//        canvasView.setOnMousePressed(event -> {
-//            System.out.println(event.getX() + " " + event.getY());
-//            refresh();
-//        });
+        canvasCharSheetView.setOnMousePressed(event -> {
+            FontCharItem item = font.getCharItemByPosition((int)event.getX(), (int)event.getY());
+
+            if(item == null) return;
+
+            textCharInfoView.setText(item.letter + " " + item.code + " " + item.posX + " " + item.posY + " " + item.sizeX + " " + item.sizeY + " " + item.shift);
+
+        });
 
         this.font = font;
 
@@ -89,35 +94,23 @@ public class CharsWizardController {
         font.customScaleY = sliderHeightView.getValue() / 100;;
         font.customOffsetY = sliderOffsetView.getValue() / 100;
 
-        System.out.println("customScaleX=" + font.customScaleX);
-        System.out.println("customScaleY=" + font.customScaleY);
-        System.out.println("customOffsetY=" + font.customOffsetY);
-
-
         font.addNewChars(localizeFont, charsetTextView.getText());
 
         drawImage();
         onSampleTextChange(null);
-
-
-        RenderedImage renderedImage = SwingFXUtils.fromFXImage(font.getSprite(), null);
-        try {
-
-            ByteArrayOutputStream ios = new ByteArrayOutputStream();
-            ImageIO.write(renderedImage, "png", ios);
-
-            System.out.println( ios.toByteArray().length  );
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
 
     }
 
     public void onSaveButton(ActionEvent actionEvent) {
 
 
+        try {
+            font.savePngToFile("D:\\games\\Deaths Gambit Afterlife\\Backup\\new2.png");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Saved");
 
     }
 }

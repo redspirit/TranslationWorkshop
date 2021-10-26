@@ -30,6 +30,7 @@ public class MainController {
 
     public ListView<FontItem> fontListView;
     public Label fontNameLabelView;
+    public TextField addressView;
     private Stage stage;
     private HostServices hostServices;
     private FontItem currentFont;
@@ -40,15 +41,15 @@ public class MainController {
 
 //        GMSDATA.loadFile("/home/spirit/hard/TEST/data.win");
 //        GMSDATA.loadFile("/Users/spirit/Documents/Garden Story v1.0.3/data.win");
-        GMSDATA.loadFile("/Users/spirit/Documents/data.win");     // DG mac
-//        GMSDATA.loadFile("D:\\games\\Deaths Gambit Afterlife/data.win");   // DG PC
+//        GMSDATA.loadFile("/Users/spirit/Documents/data.win");     // DG mac
+        GMSDATA.loadFile("D:\\games\\Deaths Gambit Afterlife\\Backup\\garden_data.win");   // DG PC
 
         fontListView.getItems().setAll(GMSDATA.getFonts());
         fontListView.getSelectionModel().select(0);
         currentFont = fontListView.getItems().get(0);
 
-//        GMSDATA.font.toBytes();
-
+//        GMSDATA.assembly();
+        GMSDATA.assemblyT();
 
     }
 
@@ -74,6 +75,14 @@ public class MainController {
         CharsWizardController ctrl = fxml.getController();
         ctrl.ViewLoaded(currentFont);
         stage.show();
+
+    }
+
+    public void onFIND(ActionEvent actionEvent) {
+
+        int count = Utils.findAddress(GMSDATA.getBuffer(), Integer.parseInt(addressView.getText()) );
+
+        System.out.println("Count = " + count);
 
     }
 }

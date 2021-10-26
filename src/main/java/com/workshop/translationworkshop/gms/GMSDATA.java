@@ -1,9 +1,15 @@
 package com.workshop.translationworkshop.gms;
 
 import com.workshop.translationworkshop.gms.chunk.*;
+import com.workshop.translationworkshop.utils.Utils;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -44,6 +50,10 @@ public class GMSDATA {
     public static STRG strg;
     public static TXTR txtr;
     public static AUDO audo;
+
+    public static ByteBuffer getBuffer() {
+        return buffer;
+    }
 
     static public boolean loadFile(String path) {
 
@@ -103,5 +113,94 @@ public class GMSDATA {
     static public DataChunk getChunkAddress(String name) {
         return chunks.get(names.indexOf(name));
     }
+    static public int getIndexChunkByName(String name) {
+        return names.indexOf(name);
+    }
+
+    static public void assembly() {
+
+        // взять чанк FONT а модифицировать таким образом, чтобы там были добавлены новые символы
+        // модифицированный чанк добавить к концу архива и в заголовке архива прописать новый адрес на этот чанк (старый не трогается)
+
+        // берем оригинальный буфер и наращиваем ему шрифт
+        // в прописываем размер файла в заголовке
+        // находим вхождение FONT и заменяем его на UNKN (либо потом на нули заменяем)
+
+        int spacesLen = Utils.round16(buffer.capacity()) - buffer.capacity();
+        ByteBuffer spaceBuffer = ByteBuffer.allocate(spacesLen);
+        buffer = Utils.appendToBuffer(buffer, spaceBuffer);
+
+        System.out.println("spacesLen " + spacesLen);
+
+
+        ByteBuffer fontBuffer = font.assemblyFONT(buffer.capacity());
+
+
+        ByteBuffer result = Utils.appendToBuffer(buffer, fontBuffer);
+        result.order(ByteOrder.LITTLE_ENDIAN);
+
+        result.putInt(4, result.capacity() - 8);
+        result.put(font.chunk.startAddress - 8, "UNKN".getBytes(StandardCharsets.UTF_8));
+
+        // перекрываем размером предыдущий чанк чтобы парсер не пытался прочитать старые шрифты
+        DataChunk dc = chunks.get(getIndexChunkByName("FONT") - 1);
+        result.putInt(dc.startAddress - 4, dc.size + font.chunk.size + 8);
+
+        DataChunk lc = chunks.get(chunks.size() - 1); // get last chunk
+        result.putInt(lc.startAddress - 4, lc.size + spacesLen);
+
+
+
+        File file = new File("D:\\games\\Deaths Gambit Afterlife\\Backup\\mod_data.win");
+        FileChannel channel = null;
+        try {
+            channel = new FileOutputStream(file, false).getChannel();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            result.position(0);
+            channel.write(result);
+            channel.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Saved!");
+
+    }
+
+    static public void assemblyT() {
+
+//        Utils.replaceBufferContent(buffer, )
+
+
+//        txtr.addSprite();
+
+        ByteBuffer result = txtr.assemblyTXTR(0);
+
+
+
+        File file = new File("D:\\games\\Deaths Gambit Afterlife\\Backup\\txtr.win");
+        FileChannel channel = null;
+        try {
+            channel = new FileOutputStream(file, false).getChannel();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            result.position(0);
+            channel.write(result);
+            channel.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Saved textures!");
+
+    }
+
 
 }

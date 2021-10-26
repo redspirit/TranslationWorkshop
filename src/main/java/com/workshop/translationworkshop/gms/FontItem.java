@@ -19,6 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,12 +27,14 @@ import java.util.stream.Collectors;
 public class FontItem {
 
     public String name, fontName;
+    public int namePointer, fontNamePointer;
     public float size;
     public boolean isBold, isItalic;
     public int rangeBegin, rangeEnd;
     public int pagePointer;
     public float scaleX, scaleY;
     public int charsCount;
+    public int unknownData;
     public List<FontCharItem> chars = new ArrayList<>();
     public int glyphHeight = 0;
 
@@ -44,10 +47,11 @@ public class FontItem {
 
         buffer.position(start);
 
-        int unknownData = 0;
+        namePointer = buffer.getInt();
+        fontNamePointer = buffer.getInt();
 
-        name = GMSDATA.strg.getStringByAddress(buffer.getInt());
-        fontName = GMSDATA.strg.getStringByAddress(buffer.getInt());
+        name = GMSDATA.strg.getStringByAddress(namePointer);
+        fontName = GMSDATA.strg.getStringByAddress(fontNamePointer);
         size = buffer.getFloat();
         isBold = buffer.getInt() > 0;
         isItalic = buffer.getInt() > 0;
@@ -256,24 +260,52 @@ public class FontItem {
     }
 
     public FontCharItem getCharItemByPosition(int x, int y) {
-
         return chars.stream().filter(item -> (x >= item.posX && x <= item.posX + item.sizeX) && (y >= item.posY && y <= item.posY + item.sizeY)).findFirst().orElse(null);
+    }
 
+    public ByteBuffer toBuffer(int startCount) {
+
+        charsCount = chars.size();
+        int entireSize = (12 * 4) + (charsCount * 4) + (charsCount * 16); // font header + chars header + chars content
+        ByteBuffer b = ByteBuffer.allocate(entireSize);
+        b.order(ByteOrder.LITTLE_ENDIAN);
+
+        b.putInt(namePointer);
+        b.putInt(fontNamePointer);
+        b.putFloat(size);
+        b.putInt(isBold ? 1 : 0);
+        b.putInt(isItalic ? 1 : 0);
+        b.putInt(rangeBegin);
+        b.putInt(rangeEnd);
+        b.putInt(pagePointer);
+        b.putFloat(scaleX);
+        b.putFloat(scaleY);
+        b.putInt(unknownData);
+        b.putInt(charsCount);
+
+        int pos = b.position() + (charsCount * 4) + startCount;
+        for(int i = 0; i < charsCount; i++) {
+            b.putInt(pos + (i * 16));
+        }
+
+        for(int i = 0; i < charsCount; i++) {
+            FontCharItem ch = chars.get(i);
+            b.putShort((short)ch.code);
+            b.putShort(ch.posX);
+            b.putShort(ch.posY);
+            b.putShort(ch.sizeX);
+            b.putShort(ch.sizeY);
+            b.putShort(ch.shift);
+            b.putInt(ch.offset);
+        }
+
+        b.rewind();
+        return b;
     }
 
     public String toString() {
         return name;
     }
 
-    public ByteBuffer toBytes() {
-
-        int len = (12 * 4) + (charsCount * 4) + (charsCount * 16);
-
-        System.out.println(len);
-
-        ByteBuffer bb = ByteBuffer.allocate(len);
-
-        return bb;
-    }
 
 }

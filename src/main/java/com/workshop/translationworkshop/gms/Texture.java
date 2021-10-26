@@ -1,5 +1,6 @@
 package com.workshop.translationworkshop.gms;
 
+import com.workshop.translationworkshop.utils.Utils;
 import javafx.scene.image.Image;
 
 import java.io.ByteArrayInputStream;
@@ -10,7 +11,7 @@ public class Texture {
 
     public int scaled, generatedMips;
     public int pngPointer;
-    private byte[] imageBytes;
+    public byte[] imageBytes;
 
     private final long endNumber;
 
@@ -28,6 +29,17 @@ public class Texture {
         }
         imageBytes = new byte[i + 8];
         buffer.slice(pngPointer, i + 8).get(imageBytes);
+    }
+
+    public int getImageSize() {
+        return Utils.round16(imageBytes.length) + 80;
+    }
+
+    public ByteBuffer getImageBytes() {
+        ByteBuffer bb = ByteBuffer.allocate(getImageSize());
+        bb.put(imageBytes);
+        bb.rewind();
+        return bb;
     }
 
     public Image getImage() {

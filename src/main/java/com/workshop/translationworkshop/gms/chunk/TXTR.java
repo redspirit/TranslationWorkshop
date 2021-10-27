@@ -12,7 +12,7 @@ import java.util.List;
 
 public class TXTR {
 
-    private final DataChunk chunk;
+    public final DataChunk chunk;
     private final List<Integer> addresses = new ArrayList<>();
     public List<Texture> textures = new ArrayList<>();
     public int entries = 0;
@@ -35,6 +35,7 @@ public class TXTR {
             t.generatedMips = chunk.buffer.getInt();
             t.pngPointer = chunk.buffer.getInt();
             t.loadPng(chunk.buffer);
+            t.index = i;
             textures.add(t);
 
         }
@@ -51,8 +52,8 @@ public class TXTR {
         t.scaled = 1;
         t.generatedMips = 0;
         t.imageBytes = image;
-        t.pngPointer = 0; // ?????
-
+        t.pngPointer = 0; // не используется при добавлении
+        t.index = textures.size();
         textures.add(t);
 
     }
@@ -61,18 +62,21 @@ public class TXTR {
 
         entries = textures.size();
 
-
         int totalImagesSize = 0;
         for(Texture t : textures) {
             totalImagesSize += t.getImageSize();
         }
 
-        int entireSize = (3 * 4) + (entries * 4) + (entries * 3 * 4) + totalImagesSize;
+        int headedSize = (3 * 4) + (entries * 4) + (entries * 3 * 4);
+        int spacedHeaderSize = Utils.roundN(headedSize, 128);
+        int spaceSize = spacedHeaderSize - headedSize;
+        System.out.println("spaceSize " + spaceSize);
+        int entireSize = spacedHeaderSize + totalImagesSize;
         ByteBuffer result = ByteBuffer.allocate(Utils.round16(entireSize));
         result.order(ByteOrder.LITTLE_ENDIAN);
 
         result.put("TXTR".getBytes(StandardCharsets.UTF_8));
-        result.putInt(entireSize - 8); // size of chunk
+        result.putInt(result.capacity() - 8); // size of chunk
         result.putInt(entries); // count of textures
 
         int pos = result.position() + (entries * 4) + contentSize;
@@ -80,13 +84,17 @@ public class TXTR {
             result.putInt(pos + i * 12); // pointer to start texture header
         }
 
-        pos = result.position() + (entries * 12) + contentSize;
+        pos = result.position() + (entries * 12) + spaceSize + contentSize;
         int accumulate = 0;
         for(Texture t : textures) {
             result.putInt(t.scaled);
             result.putInt(t.generatedMips);
             result.putInt(pos + accumulate); // pointer to image
             accumulate += t.getImageSize();
+        }
+
+        for(int i = 0; i < spaceSize; i++) {
+            result.put((byte)0);
         }
 
         for(Texture t : textures) {

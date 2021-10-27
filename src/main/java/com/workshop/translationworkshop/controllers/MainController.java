@@ -24,7 +24,14 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class MainController {
 
@@ -48,8 +55,33 @@ public class MainController {
         fontListView.getSelectionModel().select(0);
         currentFont = fontListView.getItems().get(0);
 
-//        GMSDATA.assembly();
-        GMSDATA.assemblyT();
+
+
+        loadNewSprite();
+
+
+        ByteBuffer binary = GMSDATA.assemblyBinary();
+        try {
+            GMSDATA.saveBufferToWIN(binary, "D:\\games\\Deaths Gambit Afterlife\\Backup\\all_data.win");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        System.out.println("Saved all!");
+
+    }
+
+    public void loadNewSprite() {
+
+        byte[] imgBytes;
+        try {
+            imgBytes = Files.readAllBytes(Path.of("D:\\games\\Deaths Gambit Afterlife\\Backup\\new-texture.png"));
+        } catch (IOException e) {
+            e.printStackTrace(); return;
+        }
+
+        GMSDATA.txtr.addSprite(imgBytes);
 
     }
 

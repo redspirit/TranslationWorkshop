@@ -96,8 +96,8 @@ public class GMSDATA {
         font = new FONT(getChunkAddress("FONT"));
         tpag = new TPAG(getChunkAddress("TPAG"));
         txtr = new TXTR(getChunkAddress("TXTR"));
+        audo = new AUDO(getChunkAddress("AUDO"));
 
-        
         return true;
 
     }
@@ -117,88 +117,72 @@ public class GMSDATA {
         return names.indexOf(name);
     }
 
-    static public void assembly() {
+    static private ByteBuffer assemblyTxtr(ByteBuffer input) {
 
-        // взять чанк FONT а модифицировать таким образом, чтобы там были добавлены новые символы
-        // модифицированный чанк добавить к концу архива и в заголовке архива прописать новый адрес на этот чанк (старый не трогается)
+        ByteBuffer txtrBuffer = txtr.assemblyTXTR(txtr.chunk.chunkStart);
 
-        // берем оригинальный буфер и наращиваем ему шрифт
-        // в прописываем размер файла в заголовке
-        // находим вхождение FONT и заменяем его на UNKN (либо потом на нули заменяем)
-
-        int spacesLen = Utils.round16(buffer.capacity()) - buffer.capacity();
-        ByteBuffer spaceBuffer = ByteBuffer.allocate(spacesLen);
-        buffer = Utils.appendToBuffer(buffer, spaceBuffer);
-
-        System.out.println("spacesLen " + spacesLen);
-
-
-        ByteBuffer fontBuffer = font.assemblyFONT(buffer.capacity());
-
-
-        ByteBuffer result = Utils.appendToBuffer(buffer, fontBuffer);
+        ByteBuffer result = Utils.replaceBufferContent(input, txtr.chunk.chunkStart, txtr.chunk.chunkSize, txtrBuffer);
         result.order(ByteOrder.LITTLE_ENDIAN);
 
-        result.putInt(4, result.capacity() - 8);
-        result.put(font.chunk.startAddress - 8, "UNKN".getBytes(StandardCharsets.UTF_8));
+        int expandSize = txtrBuffer.capacity() - txtr.chunk.chunkSize;
+
+        System.out.println("Image expandSize " + expandSize);
+
+        result.putInt(4, result.capacity() - 8); // set FORM size
+
+        audo.increaseAddressesBy(result, expandSize); // прописываем адреса на ресурсы в следующем за текстурами чанке AUDO
+
+        return result;
+
+    }
+
+    static private ByteBuffer assemblyFont(ByteBuffer input) {
+
+        // взять чанк FONT и модифицировать таким образом, чтобы там были добавлены новые символы
+
+        int spacesLen = Utils.round16(input.capacity()) - input.capacity();
+        ByteBuffer spaceBuffer = ByteBuffer.allocate(spacesLen);
+        input = Utils.appendToBuffer(input, spaceBuffer);
+
+        ByteBuffer fontBuffer = font.assemblyFONT(input.capacity());
+
+        ByteBuffer result = Utils.appendToBuffer(input, fontBuffer);
+        result.order(ByteOrder.LITTLE_ENDIAN);
+
+        result.putInt(4, result.capacity() - 8); // update FORM size
+        result.put(font.chunk.chunkStart, "UNKN".getBytes(StandardCharsets.UTF_8));
 
         // перекрываем размером предыдущий чанк чтобы парсер не пытался прочитать старые шрифты
         DataChunk dc = chunks.get(getIndexChunkByName("FONT") - 1);
         result.putInt(dc.startAddress - 4, dc.size + font.chunk.size + 8);
 
-        DataChunk lc = chunks.get(chunks.size() - 1); // get last chunk
-        result.putInt(lc.startAddress - 4, lc.size + spacesLen);
+        DataChunk lc = chunks.get(chunks.size() - 1);
+        int lastChunkAddress = DataChunk.findAddressByName(result, lc.name);
+        result.putInt(lastChunkAddress + 4, lc.size + spacesLen);
 
-
-
-        File file = new File("D:\\games\\Deaths Gambit Afterlife\\Backup\\mod_data.win");
-        FileChannel channel = null;
-        try {
-            channel = new FileOutputStream(file, false).getChannel();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            result.position(0);
-            channel.write(result);
-            channel.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("Saved!");
+        return result;
 
     }
 
-    static public void assemblyT() {
+    static public ByteBuffer assemblyBinary() {
 
-//        Utils.replaceBufferContent(buffer, )
+        ByteBuffer bb = assemblyTxtr(buffer);
 
+        bb = assemblyFont(bb);
 
-//        txtr.addSprite();
+        return bb;
 
-        ByteBuffer result = txtr.assemblyTXTR(0);
+    }
 
+    static public void saveBufferToWIN(ByteBuffer binary, String path) throws IOException {
 
-
-        File file = new File("D:\\games\\Deaths Gambit Afterlife\\Backup\\txtr.win");
+        File file = new File(path);
         FileChannel channel = null;
-        try {
-            channel = new FileOutputStream(file, false).getChannel();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
 
-        try {
-            result.position(0);
-            channel.write(result);
-            channel.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("Saved textures!");
+        channel = new FileOutputStream(file, false).getChannel();
+        binary.rewind();
+        channel.write(binary);
+        channel.close();
 
     }
 

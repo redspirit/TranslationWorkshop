@@ -9,8 +9,8 @@ public class Utils {
         return (int)(Math.ceil(n / 16.0) * 16);
     }
 
-    static public int round96(int n) {
-        return (int)(Math.ceil(n / 96.0) * 96);
+    static public int roundN(int n, int i) {
+        return (int)(Math.ceil(n / (float)i) * i);
     }
 
     static public String intToHex(int n) {

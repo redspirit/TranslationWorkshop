@@ -10,6 +10,7 @@ import java.nio.ByteOrder;
 public class Texture {
 
     public int scaled, generatedMips;
+    public int index;
     public int pngPointer;
     public byte[] imageBytes;
 
@@ -32,7 +33,14 @@ public class Texture {
     }
 
     public int getImageSize() {
-        return Utils.round16(imageBytes.length) + 80;
+
+        if(index == GMSDATA.txtr.textures.size() - 1) {
+            // is last image
+            return Utils.roundN(imageBytes.length, 16);
+        } else {
+            return Utils.roundN(imageBytes.length, 128);
+        }
+
     }
 
     public ByteBuffer getImageBytes() {
@@ -45,12 +53,6 @@ public class Texture {
     public Image getImage() {
         Image image = new Image(new ByteArrayInputStream(imageBytes));
         return image;
-    }
-
-    public void createNew(Image img) {
-
-        // todo png images to bytes;
-
     }
 
     public String toString() {

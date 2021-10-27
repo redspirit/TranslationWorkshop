@@ -20,17 +20,9 @@ import javafx.scene.text.Font;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.stage.Stage;
 
-import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageOutputStream;
-import java.awt.image.RenderedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
 
 public class CharsWizardController {
 
-    public TextField fontIndexView;
     public Canvas canvasCharSheetView;
     public TextArea charsetTextView;
     public TextField sampleTextView;
@@ -71,7 +63,7 @@ public class CharsWizardController {
         canvasCharSheetView.setHeight(h);
         GraphicsContext ctx = canvasCharSheetView.getGraphicsContext2D();
 
-        ctx.setImageSmoothing(false);
+        ctx.setImageSmoothing(true);
         ctx.setFill(Paint.valueOf("#00587a"));
         ctx.fillRect(0,0, w, h);
         ctx.drawImage(img, 0, 0, w, h);

@@ -30,8 +30,8 @@ public class MainController {
 
 //        GMSDATA.loadFile("/home/spirit/hard/TEST/data.win");
 //        GMSDATA.loadFile("/Users/spirit/Documents/Garden Story v1.0.3/data.win");
-//        GMSDATA.loadFile("/Users/spirit/Documents/data.win");     // DG mac
-        GMSDATA.loadFile("D:\\games\\Deaths Gambit Afterlife\\Backup\\data.win");   // DG PC
+        GMSDATA.loadFile("/Users/spirit/Documents/data.win");     // DG mac
+//        GMSDATA.loadFile("D:\\games\\Deaths Gambit Afterlife\\Backup\\data.win");   // DG PC
 
         fontListView.getItems().setAll(GMSDATA.getFonts());
         fontListView.getSelectionModel().select(0);

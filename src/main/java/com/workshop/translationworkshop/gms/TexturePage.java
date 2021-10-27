@@ -19,6 +19,9 @@ public class TexturePage {
         this.target = target;
         this.size = size;
         this.textureIndex = textureIndex; // texture index
+
+        // todo надо сделать получение картинки в конструкторе и в ресете а так использовать уже загруженную картинку
+
     }
 
     public void extendSprite() {
@@ -28,9 +31,15 @@ public class TexturePage {
         // прописать странице ссылку на новую текстуру
         // исправить все размерные указатели в этой странице
 
+        if(isExtended) return;
 
         isExtended = true;
+
+        PixelReader reader = cachedImage.getPixelReader();
+        cachedImage = new WritableImage(size.x, size.y * 2);
+        cachedImage.getPixelWriter().setPixels(0, 0, size.x, size.y, reader, 0, 0);
         size.y = (short) (size.y * 2);
+
     }
 
     public void clearCache() {

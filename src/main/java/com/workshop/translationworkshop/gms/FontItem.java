@@ -223,8 +223,8 @@ public class FontItem {
         for (int i = 0; i < str.length(); i++) {
             boolean res = addNewChar(font, str.charAt(i));
             if(!res) {
-//                getTexturePage().extendSprite();
-//                addNewChars(font, str);
+                getTexturePage().extendSprite();
+                addNewChars(font, str);
                 break;
             }
         }

@@ -3,7 +3,6 @@ package com.workshop.translationworkshop.gms.chunk;
 import com.workshop.translationworkshop.gms.DataChunk;
 import com.workshop.translationworkshop.gms.Texture;
 import com.workshop.translationworkshop.utils.Utils;
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
@@ -46,7 +45,7 @@ public class TXTR {
         return textures.get(index);
     }
 
-    public void addSprite(byte[] image) {
+    public int addSprite(byte[] image) { // return index
 
         Texture t = new Texture();
         t.scaled = 1;
@@ -55,6 +54,8 @@ public class TXTR {
         t.pngPointer = 0; // не используется при добавлении
         t.index = textures.size();
         textures.add(t);
+
+        return t.index;
 
     }
 

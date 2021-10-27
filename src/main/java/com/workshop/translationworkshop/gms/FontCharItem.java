@@ -12,4 +12,7 @@ public class FontCharItem {
     public int offset;
     public boolean isCustom = false;
 
+    public int getCode() {
+        return code;
+    }
 }

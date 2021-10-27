@@ -6,7 +6,6 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="407.0" prefWidth="728.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.workshop.translationworkshop.controllers.MainController">
@@ -34,7 +33,6 @@
       <ListView fx:id="fontListView" layoutX="14.0" layoutY="58.0" onMouseClicked="#onFontListClick" prefHeight="327.0" prefWidth="160.0" />
       <Label fx:id="fontNameLabelView" layoutX="183.0" layoutY="45.0" text="Name: ***" />
       <Button layoutX="183.0" layoutY="76.0" mnemonicParsing="false" onAction="#onAddCharsButton" text="Add chars" />
-      <TextField fx:id="addressView" layoutX="183.0" layoutY="360.0" />
-      <Button layoutX="338.0" layoutY="360.0" mnemonicParsing="false" onAction="#onFIND" text="FIND" />
+      <Button layoutX="313.0" layoutY="360.0" mnemonicParsing="false" onAction="#onSaveToWin" prefHeight="25.0" prefWidth="209.0" text="Save to data.win" />
    </children>
 </AnchorPane>

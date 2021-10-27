@@ -1,18 +1,12 @@
 package com.workshop.translationworkshop.gms;
 
-import com.workshop.translationworkshop.Application;
 import com.workshop.translationworkshop.utils.Glyph;
-import com.workshop.translationworkshop.utils.Utils;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.PixelReader;
-import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontSmoothingType;
-
 import javax.imageio.ImageIO;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayOutputStream;
@@ -21,6 +15,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -233,6 +228,11 @@ public class FontItem {
                 break;
             }
         }
+
+        // сортируем символы по коду - это важно
+        chars = chars.stream()
+                .sorted(Comparator.comparing(FontCharItem::getCode))
+                .collect(Collectors.toList());
 
     }
 

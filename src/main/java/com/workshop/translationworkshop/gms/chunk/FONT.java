@@ -61,6 +61,7 @@ public class FONT {
 
         int entireSize = (3 * 4) + (entries * 4) + fontsItemsSize + 512;
         ByteBuffer result = ByteBuffer.allocate(Utils.round16(entireSize));
+        entireSize = result.capacity();
         result.order(ByteOrder.LITTLE_ENDIAN);
 
         result.put("FONT".getBytes(StandardCharsets.UTF_8));
@@ -85,8 +86,6 @@ public class FONT {
         for(short i = 0; i < 128; i++) {
             result.putShort((short)63);
         }
-
-        System.out.println("LEN FONTS = " + entireSize);
 
         result.rewind();
         return result;

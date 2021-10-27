@@ -2,7 +2,6 @@ package com.workshop.translationworkshop.gms;
 
 import com.workshop.translationworkshop.gms.chunk.*;
 import com.workshop.translationworkshop.utils.Utils;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -23,6 +22,7 @@ public class GMSDATA {
 
     private static List<String> names = new ArrayList<>();
     private static List<DataChunk> chunks = new ArrayList<>();
+    public static List<ReplacePointer> repPointers = new ArrayList<>();
 
     public static GEN8 gen8;
     public static OPTN optn;
@@ -167,8 +167,17 @@ public class GMSDATA {
     static public ByteBuffer assemblyBinary() {
 
         ByteBuffer bb = assemblyTxtr(buffer);
-
         bb = assemblyFont(bb);
+//        return assemblyFont(buffer);
+
+        for(ReplacePointer rep : GMSDATA.repPointers) {
+            if(rep.isShort) {
+                bb.putShort(rep.address, (short) rep.value);
+            } else {
+                bb.putInt(rep.address, rep.value);
+            }
+        }
+
 
         return bb;
 

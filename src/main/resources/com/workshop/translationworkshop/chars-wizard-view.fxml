@@ -34,7 +34,7 @@
                      </content>
                   </ScrollPane>
                   <Button layoutX="629.0" layoutY="61.0" mnemonicParsing="false" onAction="#onApplyButton" prefHeight="26.0" prefWidth="117.0" text="Apply" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="61.0" />
-                  <Button layoutX="652.0" layoutY="409.0" mnemonicParsing="false" onAction="#onSaveButton" prefHeight="26.0" prefWidth="124.0" text="Save as PNG" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                  <Button layoutX="652.0" layoutY="409.0" mnemonicParsing="false" onAction="#onSaveButton" prefHeight="26.0" prefWidth="124.0" text="Save" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                   <TextField fx:id="textCharInfoView" layoutX="443.0" layoutY="213.0" prefHeight="25.0" prefWidth="324.0" AnchorPane.rightAnchor="19.0" AnchorPane.topAnchor="213.0" />
                </children>
             </AnchorPane>

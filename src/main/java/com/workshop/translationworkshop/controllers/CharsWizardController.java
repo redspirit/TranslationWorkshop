@@ -3,6 +3,7 @@ package com.workshop.translationworkshop.controllers;
 import com.workshop.translationworkshop.gms.FontCharItem;
 import com.workshop.translationworkshop.gms.FontItem;
 import com.workshop.translationworkshop.gms.GMSDATA;
+import com.workshop.translationworkshop.gms.ReplacePointer;
 import com.workshop.translationworkshop.utils.Glyph;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
@@ -17,6 +18,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.stage.Stage;
+
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.RenderedImage;
@@ -103,14 +106,18 @@ public class CharsWizardController {
 
     public void onSaveButton(ActionEvent actionEvent) {
 
+        int textureIndex = GMSDATA.txtr.addSprite(font.getSpritePngData());
 
-        try {
-            font.savePngToFile("D:\\games\\Deaths Gambit Afterlife\\Backup\\new2.png");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        System.out.println("pagePointer " + font.pagePointer);
 
-        System.out.println("Saved");
+        GMSDATA.repPointers.add(new ReplacePointer(font.pagePointer, 0, true));            // tpage source x = 0
+        GMSDATA.repPointers.add(new ReplacePointer(font.pagePointer + 2, 0, true)); // tpage source y = 0
+        GMSDATA.repPointers.add(new ReplacePointer(font.pagePointer + 20, textureIndex, true)); // texture index
+        // еще добавить новые размеры спрайта если он будет увеличен
+
+
+        Stage stage = (Stage) charsetTextView.getScene().getWindow();
+        stage.close();
 
     }
 }

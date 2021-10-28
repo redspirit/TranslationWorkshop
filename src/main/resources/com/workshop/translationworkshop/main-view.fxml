@@ -6,7 +6,9 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="407.0" prefWidth="728.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.workshop.translationworkshop.controllers.MainController">
    <children>
@@ -34,5 +36,11 @@
       <Label fx:id="fontNameLabelView" layoutX="183.0" layoutY="45.0" text="Name: ***" />
       <Button layoutX="183.0" layoutY="76.0" mnemonicParsing="false" onAction="#onAddCharsButton" text="Add chars" />
       <Button layoutX="313.0" layoutY="360.0" mnemonicParsing="false" onAction="#onSaveToWin" prefHeight="25.0" prefWidth="209.0" text="Save to data.win" />
+      <Pane layoutX="460.0" layoutY="40.0" prefHeight="263.0" prefWidth="254.0" style="-fx-background-color: black;">
+         <children>
+            <ImageView fx:id="previewFontImageView" fitHeight="263.0" fitWidth="254.0" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </Pane>
+      <Label fx:id="spriteInfoLabelView" layoutX="460.0" layoutY="313.0" text="Sprite size" />
    </children>
 </AnchorPane>

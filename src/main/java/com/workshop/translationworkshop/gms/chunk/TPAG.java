@@ -1,9 +1,6 @@
 package com.workshop.translationworkshop.gms.chunk;
 
-import com.workshop.translationworkshop.gms.DataChunk;
-import com.workshop.translationworkshop.gms.SpritePoint;
-import com.workshop.translationworkshop.gms.SpriteRect;
-import com.workshop.translationworkshop.gms.TexturePage;
+import com.workshop.translationworkshop.gms.*;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -30,6 +27,9 @@ public class TPAG {
         for(int i = 0; i < entries; i++) {
             chunk.buffer.position(addresses.get(i));
 
+            // загружаем только те страницы, которые привязаны к шрифтам
+            if(!GMSDATA.font.tpagAddrList.contains(addresses.get(i))) continue;
+
             SpriteRect source = new SpriteRect(
                     new SpritePoint(chunk.buffer.getShort(), chunk.buffer.getShort()),
                     new SpritePoint(chunk.buffer.getShort(), chunk.buffer.getShort())
@@ -41,16 +41,14 @@ public class TPAG {
             SpritePoint size = new SpritePoint(chunk.buffer.getShort(), chunk.buffer.getShort());
             short index = chunk.buffer.getShort();
 
-            pages.add(new TexturePage(source, target, size, index));
+            pages.add(new TexturePage(source, target, size, index, addresses.get(i)));
 
         }
 
     }
 
     public TexturePage getByAddress(int address) {
-        int index = addresses.indexOf(address);
-        if(index == -1) return null;
-        return pages.get(index);
+        return pages.stream().filter(it -> it.address == address).findFirst().orElse(null);
     }
 
 }

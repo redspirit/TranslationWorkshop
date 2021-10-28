@@ -93,10 +93,12 @@ public class GMSDATA {
 
         strg = new STRG(getChunkAddress("STRG"));
         gen8 = new GEN8(getChunkAddress("GEN8"));
+        txtr = new TXTR(getChunkAddress("TXTR"));
         font = new FONT(getChunkAddress("FONT"));
         tpag = new TPAG(getChunkAddress("TPAG"));
-        txtr = new TXTR(getChunkAddress("TXTR"));
         audo = new AUDO(getChunkAddress("AUDO"));
+
+        font.assignTpages(); // назначем каждому шрифту свой tpage
 
         return true;
 

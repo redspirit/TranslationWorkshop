@@ -7,6 +7,11 @@ public class SpriteRect {
         this.position = position;
         this.size = size;
     }
+
+    public SpriteRect clone() {
+        return new SpriteRect(position.clone(), size.clone());
+    };
+
     public String toString() {
         return "[" + position + "," + size + "]";
     }

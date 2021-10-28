@@ -34,7 +34,7 @@ public class CharsWizardController {
     private FontItem font;
     private Font localizeFont;
 
-    public void ViewLoaded(FontItem font) {
+    public void viewLoaded(FontItem font) {
 
         canvasCharSheetView.setOnMousePressed(event -> {
             FontCharItem item = font.getCharItemByPosition((int)event.getX(), (int)event.getY());
@@ -55,7 +55,7 @@ public class CharsWizardController {
 
     public void drawImage() {
 
-        Image img = font.getSprite();
+        Image img = font.modPage.image;
         int w = (int) img.getWidth();
         int h = (int) img.getHeight();
 
@@ -82,14 +82,24 @@ public class CharsWizardController {
 
     public void onApplyButton(ActionEvent actionEvent) {
 
-        font.restoreSprite();
-        font.clearAllCustomChars();
+        font.reset();
 
         font.customScaleX = sliderWidthView.getValue() / 100;
         font.customScaleY = sliderHeightView.getValue() / 100;;
         font.customOffsetY = sliderOffsetView.getValue() / 100;
 
-        font.addNewChars(localizeFont, charsetTextView.getText());
+        boolean done = font.addNewChars(localizeFont, charsetTextView.getText());
+        if(!done) {
+
+            font.reset();
+            font.modPage.extendSprite();
+            font.addNewChars(localizeFont, charsetTextView.getText());
+
+            // todo ресетим, увеличиваем размер и добавляем символы еще раз
+
+            System.out.println("EXTEND OK!!!!");
+
+        }
 
         drawImage();
         onSampleTextChange(null);

@@ -10,7 +10,13 @@ public class SpritePoint {
         this.x = (short) x;
         this.y = (short) y;
     }
+
+    public SpritePoint clone() {
+        return new SpritePoint(x, y);
+    }
+
     public String toString() {
         return "(" + x + "," + y + ")";
     }
+
 }

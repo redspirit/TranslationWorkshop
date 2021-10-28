@@ -38,6 +38,8 @@ public class FontItem {
     public double customOffsetY = 0;
     public int charSpace = 0;
 
+    public TexturePage origPage, modPage;
+
     public FontItem(ByteBuffer buffer, int start) {
 
         buffer.position(start);
@@ -86,66 +88,16 @@ public class FontItem {
 
     }
 
-    public Image getSprite() {
-        return getTexturePage().getImage();
+    public void assignTpage() {
+        origPage = GMSDATA.tpag.getByAddress(pagePointer);
+        modPage = origPage.clone();
     }
 
-    public void restoreSprite() {
-        getTexturePage().clearCache();
+    public void reset() {
+        clearAllCustomChars();
+        modPage = origPage.clone();
     }
 
-    public TexturePage getTexturePage() {
-        return GMSDATA.tpag.getByAddress(pagePointer);
-    }
-
-    private FontCharItem getFontCharByCode(int code) {
-        return chars.stream().filter(it -> it.code == code).findFirst().orElse(null);
-    }
-
-    public void getImageByString(String text, Canvas canvas, double scale) {
-
-        int textWidth = 5;
-        int textHeight = 0;
-
-        GraphicsContext ctx = canvas.getGraphicsContext2D();
-
-        canvas.setHeight(glyphHeight * scale);
-        canvas.setWidth(512);
-
-        ctx.setImageSmoothing(false);
-        ctx.setFill(Paint.valueOf("#000000"));
-        ctx.fillRect(0,0, 512, glyphHeight * scale);
-
-        for (int i = 0; i < text.length(); i++) {
-            char ch = text.charAt(i);
-
-            FontCharItem charItem = getFontCharByCode(ch);
-
-            if(charItem == null) {
-                continue; // символ, который не смогли найти - пропускаем
-            }
-
-            ctx.drawImage(
-                    getSprite(),
-                    charItem.posX, charItem.posY,
-                    charItem.sizeX, charItem.sizeY,
-                    textWidth * scale, 0,
-                    charItem.sizeX * scale, charItem.sizeY * scale
-            );
-
-            textWidth += charItem.shift;
-            textHeight = charItem.sizeY;
-
-        }
-
-        canvas.setHeight(textHeight * scale);
-        canvas.setWidth(textWidth * scale + 3);
-
-    };
-
-    public void clearAllCustomChars() {
-        chars = chars.stream().filter(it -> !it.isCustom).collect(Collectors.toList());
-    }
 
     public FontCharItem getLastCharItem() {
 
@@ -169,15 +121,15 @@ public class FontItem {
     }
 
     private SpritePoint findInsertPlace(int charWidth) {
-        TexturePage page = getTexturePage();
+
         FontCharItem lastChar = getLastCharItem();
 
         int newX = lastChar.posX + lastChar.sizeX + 2;
         int newY = lastChar.posY + lastChar.sizeY + 2;
-        if(newX + charWidth > page.size.x) {
+        if(newX + charWidth > modPage.size.x) {
             // символ не влазиет в текущую строку, может есть место пониже?
 
-            if(newY + glyphHeight > page.size.y) {
+            if(newY + glyphHeight > modPage.size.y) {
                 // на спрайте уже совсем нет места
                 return null;
             } else {
@@ -212,20 +164,17 @@ public class FontItem {
         ch.isCustom = true;
         chars.add(ch);
 
-        TexturePage page = getTexturePage();
-        page.drawImage(img, ch);
+        modPage.drawImage(img, ch);
 
         return true;
     }
 
-    public void addNewChars(Font font, String str) {
+    public boolean addNewChars(Font font, String str) {
 
         for (int i = 0; i < str.length(); i++) {
             boolean res = addNewChar(font, str.charAt(i));
             if(!res) {
-                getTexturePage().extendSprite();
-                addNewChars(font, str);
-                break;
+                return false;
             }
         }
 
@@ -234,11 +183,65 @@ public class FontItem {
                 .sorted(Comparator.comparing(FontCharItem::getCode))
                 .collect(Collectors.toList());
 
+        return true;
     }
+
+    private void clearAllCustomChars() {
+        chars = chars.stream().filter(it -> !it.isCustom).collect(Collectors.toList());
+    }
+
+
+
+    private FontCharItem getFontCharByCode(int code) {
+        return chars.stream().filter(it -> it.code == code).findFirst().orElse(null);
+    }
+
+    public void getImageByString(String text, Canvas canvas, double scale) {
+
+        int textWidth = 5;
+        int textHeight = 0;
+
+        GraphicsContext ctx = canvas.getGraphicsContext2D();
+
+        canvas.setHeight(glyphHeight * scale);
+        canvas.setWidth(512);
+
+        ctx.setImageSmoothing(false);
+        ctx.setFill(Paint.valueOf("#000000"));
+        ctx.fillRect(0,0, 512, glyphHeight * scale);
+
+        for (int i = 0; i < text.length(); i++) {
+            char ch = text.charAt(i);
+
+            FontCharItem charItem = getFontCharByCode(ch);
+
+            if(charItem == null) {
+                continue; // символ, который не смогли найти - пропускаем
+            }
+
+            ctx.drawImage(
+                    modPage.image,
+                    charItem.posX, charItem.posY,
+                    charItem.sizeX, charItem.sizeY,
+                    textWidth * scale, 0,
+                    charItem.sizeX * scale, charItem.sizeY * scale
+            );
+
+            textWidth += charItem.shift;
+            textHeight = charItem.sizeY;
+
+        }
+
+        canvas.setHeight(textHeight * scale);
+        canvas.setWidth(textWidth * scale + 3);
+
+    };
+
+
 
     public byte[] getSpritePngData() {
 
-        RenderedImage renderedImage = SwingFXUtils.fromFXImage(getSprite(), null);
+        RenderedImage renderedImage = SwingFXUtils.fromFXImage(modPage.image, null);
         try {
 
             ByteArrayOutputStream ios = new ByteArrayOutputStream();
@@ -254,7 +257,7 @@ public class FontItem {
 
     public void savePngToFile(String filename) throws IOException {
 
-        RenderedImage renderedImage = SwingFXUtils.fromFXImage(getSprite(), null);
+        RenderedImage renderedImage = SwingFXUtils.fromFXImage(modPage.image, null);
         ImageIO.write(renderedImage, "png", new File(filename));
 
     }

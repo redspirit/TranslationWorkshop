@@ -4,7 +4,6 @@ import com.workshop.translationworkshop.gms.DataChunk;
 import com.workshop.translationworkshop.gms.FontItem;
 import com.workshop.translationworkshop.utils.Utils;
 
-import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
@@ -16,6 +15,7 @@ public class FONT {
     public final DataChunk chunk;
     public List<FontItem> fonts = new ArrayList<>();
     private List<Integer> addresses = new ArrayList<>();
+    public List<Integer> tpagAddrList = new ArrayList<>();
     private int entries = 0;
 
     public FONT(DataChunk chunk) {
@@ -30,16 +30,20 @@ public class FONT {
         }
 
         for(int i = 0; i < entries; i++) {
-            fonts.add(new FontItem(chunk.buffer, addresses.get(i)));
+            FontItem fi = new FontItem(chunk.buffer, addresses.get(i));
+            fonts.add(fi);
+            tpagAddrList.add(fi.pagePointer);
         }
 
     }
 
-    public FontItem getFontByAddress(int address) {
-        int index = addresses.indexOf(address);
-        if(index == -1) return null;
-        return fonts.get(index);
-    };
+    public void assignTpages() {
+
+        for(FontItem fi : fonts) {
+            fi.assignTpage();
+        }
+
+    }
 
     public FontItem getFontByIndex(int index) {
         if(index > entries - 1) return null;

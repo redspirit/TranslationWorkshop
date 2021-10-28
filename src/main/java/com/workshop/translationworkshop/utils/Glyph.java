@@ -22,9 +22,9 @@ public class Glyph {
     private Font font;
     public int localWidth, localHeight;
 
-    private double customScaleX = 1;
-    private double customScaleY = 1;
-    private double customOffsetY = 0;
+    private double customScaleX;
+    private double customScaleY;
+    private double customOffsetY;
 
     static public Font getFont(String fontFileName) {
         return Font.loadFont(Application.class.getResource("fonts/" + fontFileName).toExternalForm(), 72);

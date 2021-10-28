@@ -82,7 +82,7 @@ public class GMSDATA {
             i += 4;
 
             int chunkLen = buffer.getInt(i);
-            System.out.println(name + " = " + chunkLen);
+//            System.out.println(name + " = " + chunkLen);
 
             names.add(name);
             chunks.add( new DataChunk(name, buffer,i + 4, chunkLen) );

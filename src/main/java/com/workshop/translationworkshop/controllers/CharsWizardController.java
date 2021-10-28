@@ -5,15 +5,19 @@ import com.workshop.translationworkshop.gms.FontItem;
 import com.workshop.translationworkshop.gms.GMSDATA;
 import com.workshop.translationworkshop.gms.ReplacePointer;
 import com.workshop.translationworkshop.utils.Glyph;
+import com.workshop.translationworkshop.utils.TTFData;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
@@ -31,6 +35,7 @@ public class CharsWizardController {
     public Slider sliderHeightView;
     public Canvas sampleCanvasView;
     public TextField textCharInfoView;
+    public ChoiceBox<TTFData> fontsListView;
     private FontItem font;
     private Font localizeFont;
 
@@ -38,19 +43,28 @@ public class CharsWizardController {
 
         canvasCharSheetView.setOnMousePressed(event -> {
             FontCharItem item = font.getCharItemByPosition((int)event.getX(), (int)event.getY());
-
             if(item == null) return;
-
             textCharInfoView.setText(item.letter + " " + item.code + " " + item.posX + " " + item.posY + " " + item.sizeX + " " + item.sizeY + " " + item.shift);
-
         });
+
+
+//        fontsListView.getSelectionModel().select(0);
+//        localizeFont = TTFData.fonts.get(0).font;
 
         this.font = font;
 
-        localizeFont = Glyph.getFont("Alegreya.ttf");
+        sliderWidthView.setValue(font.customScaleX * 100);
+        sliderHeightView.setValue(font.customScaleY * 100);
+        sliderOffsetView.setValue(font.customOffsetY * 100);
 
         drawImage();
-//        onSampleTextChange(null);
+
+        fontsListView.getItems().setAll(TTFData.fonts);
+        fontsListView.setOnAction(event -> {
+            localizeFont = fontsListView.getValue().font;
+            onApplyButton(null);
+        });
+
     }
 
     public void drawImage() {
@@ -95,10 +109,6 @@ public class CharsWizardController {
             font.modPage.extendSprite();
             font.addNewChars(localizeFont, charsetTextView.getText());
 
-            // todo ресетим, увеличиваем размер и добавляем символы еще раз
-
-            System.out.println("EXTEND OK!!!!");
-
         }
 
         drawImage();
@@ -108,18 +118,26 @@ public class CharsWizardController {
 
     public void onSaveButton(ActionEvent actionEvent) {
 
-        int textureIndex = GMSDATA.txtr.addSprite(font.getSpritePngData());
+        if(font.spriteStored) {
+            GMSDATA.txtr.updateSprite(font.getSpritePngData(), font.modPage.textureIndex);
+        } else {
+            font.modPage.textureIndex = GMSDATA.txtr.addSprite(font.getSpritePngData());
+        }
 
-        System.out.println("pagePointer " + font.pagePointer);
 
-        GMSDATA.repPointers.add(new ReplacePointer(font.pagePointer, 0, true));            // tpage source x = 0
-        GMSDATA.repPointers.add(new ReplacePointer(font.pagePointer + 2, 0, true)); // tpage source y = 0
-        GMSDATA.repPointers.add(new ReplacePointer(font.pagePointer + 20, textureIndex, true)); // texture index
-        // еще добавить новые размеры спрайта если он будет увеличен
+        font.updateSizesPointers();
 
+        font.spriteStored = true;
 
         Stage stage = (Stage) charsetTextView.getScene().getWindow();
         stage.close();
 
     }
+
+    public void onConfigChanged(MouseEvent mouseEvent) {
+
+        onApplyButton(null);
+
+    }
+
 }

@@ -27,7 +27,7 @@ public class TXTR {
             addresses.add(chunk.buffer.getInt());
         }
 
-        for(int i = 0; i < entries; i++) {
+        for(short i = 0; i < entries; i++) {
             chunk.buffer.position(addresses.get(i));
             Texture t = new Texture();
             t.scaled = chunk.buffer.getInt();
@@ -45,17 +45,25 @@ public class TXTR {
         return textures.get(index);
     }
 
-    public int addSprite(byte[] image) { // return index
+    public short addSprite(byte[] image) { // return index
 
         Texture t = new Texture();
         t.scaled = 1;
         t.generatedMips = 0;
         t.imageBytes = image;
         t.pngPointer = 0; // не используется при добавлении
-        t.index = textures.size();
+        t.index = (short)textures.size();
         textures.add(t);
 
         return t.index;
+
+    }
+
+    public void updateSprite(byte[] image, short textureIndex) {
+        // обновляем уже существующую текстурку
+
+        Texture t = textures.get(textureIndex);
+        t.imageBytes = image;
 
     }
 

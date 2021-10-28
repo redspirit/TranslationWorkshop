@@ -10,7 +10,7 @@ import java.nio.ByteOrder;
 public class Texture {
 
     public int scaled, generatedMips;
-    public int index;
+    public short index;
     public int pngPointer;
     public byte[] imageBytes;
 

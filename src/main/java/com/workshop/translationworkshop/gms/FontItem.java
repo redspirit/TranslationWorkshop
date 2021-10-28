@@ -7,6 +7,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontSmoothingType;
+
 import javax.imageio.ImageIO;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayOutputStream;
@@ -33,10 +35,11 @@ public class FontItem {
     public List<FontCharItem> chars = new ArrayList<>();
     public int glyphHeight = 0;
 
-    public double customScaleX = 1;
-    public double customScaleY = 1;
+    public double customScaleX = 1.05;
+    public double customScaleY = 0;
     public double customOffsetY = 0;
     public int charSpace = 0;
+    public boolean spriteStored = false;
 
     public TexturePage origPage, modPage;
 
@@ -206,7 +209,9 @@ public class FontItem {
         canvas.setHeight(glyphHeight * scale);
         canvas.setWidth(512);
 
-        ctx.setImageSmoothing(false);
+        ctx.setFontSmoothingType(FontSmoothingType.LCD);
+        ctx.setImageSmoothing(true);
+
         ctx.setFill(Paint.valueOf("#000000"));
         ctx.fillRect(0,0, 512, glyphHeight * scale);
 
@@ -304,6 +309,22 @@ public class FontItem {
 
         b.rewind();
         return b;
+    }
+
+    public void updateSizesPointers() {
+
+        GMSDATA.repPointers.add(new ReplacePointer(pagePointer, 0, true));            // tpage source x = 0
+        GMSDATA.repPointers.add(new ReplacePointer(pagePointer + 2, 0, true)); // tpage source y = 0
+        GMSDATA.repPointers.add(new ReplacePointer(pagePointer + 4, modPage.source.size.x, true));
+        GMSDATA.repPointers.add(new ReplacePointer(pagePointer + 6, modPage.source.size.y, true));
+        GMSDATA.repPointers.add(new ReplacePointer(pagePointer + 8, 0, true));  // tpage dest x = 0
+        GMSDATA.repPointers.add(new ReplacePointer(pagePointer + 10, 0, true)); // tpage dest y = 0
+        GMSDATA.repPointers.add(new ReplacePointer(pagePointer + 12, modPage.target.size.x, true));
+        GMSDATA.repPointers.add(new ReplacePointer(pagePointer + 14, modPage.target.size.y, true));
+        GMSDATA.repPointers.add(new ReplacePointer(pagePointer + 16, modPage.size.x, true));
+        GMSDATA.repPointers.add(new ReplacePointer(pagePointer + 18, modPage.size.y, true));
+        GMSDATA.repPointers.add(new ReplacePointer(pagePointer + 20, modPage.textureIndex, true)); // texture index
+
     }
 
     public String toString() {

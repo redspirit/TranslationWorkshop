@@ -4,11 +4,14 @@ import com.workshop.translationworkshop.Application;
 import com.workshop.translationworkshop.gms.FontItem;
 import com.workshop.translationworkshop.gms.GMSDATA;
 import com.workshop.translationworkshop.gms.TexturePage;
+import com.workshop.translationworkshop.utils.TTFData;
 import javafx.application.HostServices;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
@@ -31,6 +34,8 @@ public class MainController {
     public void onLoad(Stage stage, HostServices hs) {
         this.stage = stage;
         this.hostServices = hs;
+
+        TTFData.loadTTFFonts();
 
 //        GMSDATA.loadFile("/home/spirit/hard/TEST/data.win");
 //        GMSDATA.loadFile("/Users/spirit/Documents/Garden Story v1.0.3/data.win");
@@ -90,7 +95,7 @@ public class MainController {
             e.printStackTrace();
         }
 
-        System.out.println("Saved all!");
+        new Alert(Alert.AlertType.INFORMATION, "WIN file updated successfully", ButtonType.OK).showAndWait();
 
     }
 

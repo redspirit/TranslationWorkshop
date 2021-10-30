@@ -42,5 +42,6 @@
          </children>
       </Pane>
       <Label fx:id="spriteInfoLabelView" layoutX="460.0" layoutY="313.0" text="Sprite size" />
+      <ImageView fx:id="image123" fitHeight="9.0" fitWidth="23.0" layoutX="264.0" layoutY="290.0" pickOnBounds="true" preserveRatio="true" smooth="false" style="-fx-scale-x: 8; -fx-scale-y: 8;" />
    </children>
 </AnchorPane>

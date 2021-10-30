@@ -19,6 +19,15 @@ public class TTFData {
         this.name = this.font.getName();
     }
 
+    public TTFData(String filename, double size) {
+        this.fileName = filename;
+        this.font = Font.loadFont(
+                Application.class.getResource("fonts/" + filename).toExternalForm(),
+                size
+        );
+        this.name = this.font.getName();
+    }
+
     public String toString() {
         return name;
     }

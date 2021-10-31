@@ -29,7 +29,6 @@ public class MainController {
     public Label fontNameLabelView;
     public ImageView previewFontImageView;
     public Label spriteInfoLabelView;
-    public ImageView image123;
     private Stage stage;
     private HostServices hostServices;
     private FontItem currentFont;
@@ -45,31 +44,14 @@ public class MainController {
 //        GMSDATA.loadFile("/Users/spirit/Documents/data.win");     // DG mac
 //        GMSDATA.loadFile("D:\\games\\Deaths Gambit Afterlife\\Backup\\data.win");   // DG PC
 
-//        fontListView.getItems().setAll(GMSDATA.getFonts());
-//        fontListView.getSelectionModel().select(0);
-//        currentFont = fontListView.getItems().get(0);
-//        previewFontImageView.setImage(currentFont.modPage.image);
-//        TexturePage tp = currentFont.modPage;
-//        spriteInfoLabelView.setText(tp.size.x + "x" + tp.size.y);
+        fontListView.getItems().setAll(GMSDATA.getFonts());
+        fontListView.getSelectionModel().select(0);
+        currentFont = fontListView.getItems().get(0);
+        previewFontImageView.setImage(currentFont.modPage.image);
+        TexturePage tp = currentFont.modPage;
+        spriteInfoLabelView.setText(tp.size.x + "x" + tp.size.y);
 
 
-//
-        // 5.76
-//        TTFData ttf = new TTFData("cc.yal.6w4.ttf", 16);
-        TTFData ttf = new TTFData("cc.yal.7w7.block.ttf", 16);
-
-        Glyph gl = new Glyph(ttf.font);
-        gl.setParams(0,0, -3);
-
-        Image img = gl.getCharImagePixel("ё", 17);
-
-        image123.setImage(img);
-
-        try {
-            gl.savePngToFile(img, "/Users/spirit/Documents/123.png");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
     }
 

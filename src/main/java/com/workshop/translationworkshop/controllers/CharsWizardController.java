@@ -37,7 +37,7 @@ public class CharsWizardController {
     public TextField textCharInfoView;
     public ChoiceBox<TTFData> fontsListView;
     private FontItem font;
-    private Font localizeFont;
+    private TTFData localizeFont;
 
     public void viewLoaded(FontItem font) {
 
@@ -48,7 +48,7 @@ public class CharsWizardController {
         });
 
 
-//        fontsListView.getSelectionModel().select(0);
+        fontsListView.getSelectionModel().select(0);
 //        localizeFont = TTFData.fonts.get(0).font;
 
         this.font = font;
@@ -61,8 +61,8 @@ public class CharsWizardController {
 
         fontsListView.getItems().setAll(TTFData.fonts);
         fontsListView.setOnAction(event -> {
-            localizeFont = fontsListView.getValue().font;
-            onApplyButton(null);
+            localizeFont = fontsListView.getValue();
+//            onApplyButton(null);
         });
 
     }
@@ -91,7 +91,7 @@ public class CharsWizardController {
     }
 
     public void onSampleTextChange(KeyEvent keyEvent) {
-        font.getImageByString(sampleTextView.getText(), sampleCanvasView, 1);
+        font.getImageByString(sampleTextView.getText(), sampleCanvasView, 4);
     }
 
     public void onApplyButton(ActionEvent actionEvent) {

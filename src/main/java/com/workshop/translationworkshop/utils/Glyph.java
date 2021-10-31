@@ -30,9 +30,11 @@ public class Glyph {
     private Font font;
     public int localWidth, localHeight;
 
+
     private double customScaleX;
     private double customScaleY;
     private double customOffsetY;
+    private double customShift;
 
     static public Font getFont(String fontFileName) {
         return Font.loadFont(Application.class.getResource("fonts/" + fontFileName).toExternalForm(), 72);
@@ -51,10 +53,11 @@ public class Glyph {
 
     }
 
-    public void setParams(double customScaleX, double customScaleY, double customOffsetY) {
+    public void setParams(double customScaleX, double customScaleY, double customOffsetY, int shift) {
         this.customScaleX = customScaleX;
         this.customScaleY = customScaleY;
         this.customOffsetY = customOffsetY;
+        this.customShift = shift;
     }
 
     private Point2D textSizes(String s) {
@@ -68,15 +71,13 @@ public class Glyph {
 
     public WritableImage getCharImagePixel(String ch, int sizeY) {
 
-//        int sizeX = sizeY;
-
         Canvas cnv = new Canvas(sizeY, sizeY);
         GraphicsContext gc = cnv.getGraphicsContext2D();
         gc.setFont(font);
         gc.setFill(Paint.valueOf("white"));
         gc.setImageSmoothing(false);
 
-        gc.fillText(ch, 0, sizeY + customOffsetY);
+        gc.fillText(ch, 0, sizeY + (int)(customOffsetY * 10));
 
         WritableImage wi = canvasToImage(cnv);
         PixelReader reader = wi.getPixelReader();
@@ -90,7 +91,7 @@ public class Glyph {
                 if(isPixel) {
                     writer.setColor(x, y, clr);
                 } else {
-                    if(x + 1 > charWidth) charWidth = x + 1;
+                    if(x > charWidth) charWidth = x;
                 }
             }
         }
@@ -109,32 +110,31 @@ public class Glyph {
     }
 
     public WritableImage getCharImage(String ch, int size) {
-//        Point2D sizes = textSizes(ch);
-//        double ratio = (size / (double)sizes.y) * customScaleX;
-//        localWidth = (int)Math.round(ratio * sizes.x);
-//        localHeight = size;
-//
-//        Canvas cnv2 = new Canvas(localWidth, localHeight);
-//        GraphicsContext gc = cnv2.getGraphicsContext2D();
-//        gc.setImageSmoothing(true);
-//
-//        canvas.setWidth(sizes.x);
-//        canvas.setHeight(sizes.y);
-//
-//        ctx.fillText(ch, 0, customOffsetY * localHeight);
-//
-//        double hOff = sizes.y * customScaleY;
-//
-//        gc.drawImage(
-//                canvasToImage(canvas),
-//                0, hOff,
-//                sizes.x, sizes.y - hOff,
-//                0, 0,
-//                localWidth, localHeight
-//        );
-//
-//        return canvasToImage(cnv2);
-        return null;
+        Point2D sizes = textSizes(ch);
+        double ratio = (size / sizes.getY()) * customScaleX;
+        localWidth = (int)Math.round(ratio * sizes.getX());
+        localHeight = size;
+
+        Canvas cnv2 = new Canvas(localWidth, localHeight);
+        GraphicsContext gc = cnv2.getGraphicsContext2D();
+        gc.setImageSmoothing(true);
+
+        canvas.setWidth(sizes.getX());
+        canvas.setHeight(sizes.getY());
+
+        ctx.fillText(ch, 0, customOffsetY * localHeight);
+
+        double hOff = sizes.getY() * customScaleY;
+
+        gc.drawImage(
+                canvasToImage(canvas),
+                0, hOff,
+                sizes.getX(), sizes.getY() - hOff,
+                0, 0,
+                localWidth, localHeight
+        );
+
+        return canvasToImage(cnv2);
     }
 
     public WritableImage canvasToImage(Canvas c) {

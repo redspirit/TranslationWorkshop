@@ -1,6 +1,7 @@
 package com.workshop.translationworkshop.gms;
 
 import com.workshop.translationworkshop.utils.Glyph;
+import com.workshop.translationworkshop.utils.TTFData;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -38,7 +39,6 @@ public class FontItem {
     public double customScaleX = 1.05;
     public double customScaleY = 0;
     public double customOffsetY = 0;
-    public int charSpace = 0;
     public boolean spriteStored = false;
 
     public TexturePage origPage, modPage;
@@ -146,11 +146,18 @@ public class FontItem {
 
     }
 
-    public boolean addNewChar(Font font, char sym) {
+    public boolean addNewChar(TTFData ttf, char sym) {
 
-        Glyph g = new Glyph(font);
-        g.setParams(customScaleX, customScaleY, customOffsetY);
-        Image img = g.getCharImage(Character.toString(sym), glyphHeight);
+        Glyph g = new Glyph(ttf.font);
+        g.setParams(customScaleX, customScaleY, customOffsetY, ttf.glyphShift);
+
+        Image img;
+        if(ttf.isPixelFont) {
+            img = g.getCharImagePixel(Character.toString(sym), glyphHeight);
+        } else {
+            img = g.getCharImage(Character.toString(sym), glyphHeight);
+        }
+
         SpritePoint newPos = findInsertPlace((int) img.getWidth());
 
         if(newPos == null) return false;
@@ -162,7 +169,7 @@ public class FontItem {
         ch.posY = newPos.y;
         ch.sizeX = (short) img.getWidth();
         ch.sizeY = (short) glyphHeight;
-        ch.shift = (short) (ch.sizeX + charSpace);
+        ch.shift = (short) (ch.sizeX + ttf.glyphShift);
         ch.offset = 0;
         ch.isCustom = true;
         chars.add(ch);
@@ -172,10 +179,10 @@ public class FontItem {
         return true;
     }
 
-    public boolean addNewChars(Font font, String str) {
+    public boolean addNewChars(TTFData ttf, String str) {
 
         for (int i = 0; i < str.length(); i++) {
-            boolean res = addNewChar(font, str.charAt(i));
+            boolean res = addNewChar(ttf, str.charAt(i));
             if(!res) {
                 return false;
             }

@@ -33,14 +33,14 @@ public class TTFData {
     }
 
     public String toString() {
-        return name;
+        return fileName;
     }
 
 
     static public List<TTFData> fonts = new ArrayList<>();
 
     // это названия тех шрифтов, которые считаются пиксельными
-    static private String[] pixelFontNames = {"cc.yal.7w7.ttf", "cc.yal.6w4.ttf"};
+    static private String[] pixelFontNames = {"cc.yal.7w7.ttf", "cc.yal.6w4.ttf", "Nanoscript.ttf"};
 
     static public void loadTTFFonts() {
 
@@ -51,6 +51,7 @@ public class TTFData {
         List<String> strList = Arrays.stream(pixelFontNames).toList();
         for (File f : files) {
             String name = f.getName();
+            System.out.println(name);
             if(strList.contains(name)) {
                 // pixel font
                 TTFData ttf = new TTFData(name, 16.0);

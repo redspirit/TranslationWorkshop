@@ -146,9 +146,9 @@ public class FontItem {
 
     }
 
-    public boolean addNewChar(TTFData ttf, char sym) {
+    public boolean addNewChar(TTFData ttf, char sym, boolean is2X) {
 
-        Glyph g = new Glyph(ttf.font);
+        Glyph g = is2X ? new Glyph(ttf.font2x) : new Glyph(ttf.font);
         g.setParams(customScaleX, customScaleY, customOffsetY, ttf.glyphShift);
 
         Image img;
@@ -179,10 +179,10 @@ public class FontItem {
         return true;
     }
 
-    public boolean addNewChars(TTFData ttf, String str) {
+    public boolean addNewChars(TTFData ttf, String str, boolean is2X) {
 
         for (int i = 0; i < str.length(); i++) {
-            boolean res = addNewChar(ttf, str.charAt(i));
+            boolean res = addNewChar(ttf, str.charAt(i), is2X);
             if(!res) {
                 return false;
             }
@@ -217,10 +217,10 @@ public class FontItem {
         canvas.setWidth(512);
 
         ctx.setFontSmoothingType(FontSmoothingType.LCD);
-        ctx.setImageSmoothing(true);
+        ctx.setImageSmoothing(false);
 
         ctx.setFill(Paint.valueOf("#000000"));
-        ctx.fillRect(0,0, 512, glyphHeight * scale);
+        ctx.fillRect(0,0, 1024, glyphHeight * scale);
 
         for (int i = 0; i < text.length(); i++) {
             char ch = text.charAt(i);

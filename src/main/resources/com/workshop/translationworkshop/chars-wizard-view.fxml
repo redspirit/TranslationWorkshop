@@ -2,10 +2,12 @@
 
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -21,7 +23,7 @@
       <TextArea fx:id="charsetTextView" layoutX="14.0" layoutY="31.0" prefHeight="51.0" prefWidth="517.0" text="абвгдежзийклмнопрстуфхцчшщъыьэюяабвгдежзийклмнопрстуфхцчшщъыьэюяАБВГДЕЖЗИйКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" wrapText="true" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="353.0" AnchorPane.topAnchor="31.0" />
       <Slider fx:id="sliderHeightView" layoutX="539.0" layoutY="134.0" max="50.0" min="-50.0" onMouseReleased="#onConfigChanged" prefHeight="16.0" prefWidth="328.0" AnchorPane.rightAnchor="17.0" AnchorPane.topAnchor="134.0" />
       <Slider fx:id="sliderWidthView" layoutX="540.0" layoutY="82.0" max="160.0" min="50.0" onMouseReleased="#onConfigChanged" prefHeight="14.0" prefWidth="328.0" value="105.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="82.0" />
-      <Slider fx:id="sliderOffsetView" layoutX="538.0" layoutY="187.0" max="50.0" min="-50.0" onMouseReleased="#onConfigChanged" prefHeight="14.0" prefWidth="328.0" AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="187.0" />
+      <Slider fx:id="sliderOffsetView" layoutX="538.0" layoutY="187.0" min="-100.0" onMouseReleased="#onConfigChanged" prefHeight="14.0" prefWidth="328.0" AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="187.0" />
       <TextField fx:id="sampleTextView" layoutX="438.0" layoutY="267.0" onKeyTyped="#onSampleTextChange" prefHeight="26.0" prefWidth="328.0" text="Kracotka Красотка" AnchorPane.rightAnchor="21.0" AnchorPane.topAnchor="267.0" />
       <ScrollPane layoutX="439.0" layoutY="296.0" prefHeight="85.0" prefWidth="326.0" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="296.0">
          <content>
@@ -30,10 +32,12 @@
       </ScrollPane>
       <Button layoutX="726.0" layoutY="218.0" mnemonicParsing="false" onAction="#onApplyButton" prefHeight="26.0" prefWidth="131.0" text="Apply changes" AnchorPane.rightAnchor="27.0" AnchorPane.topAnchor="218.0" />
       <Button layoutX="652.0" layoutY="409.0" mnemonicParsing="false" onAction="#onSaveButton" prefHeight="26.0" prefWidth="151.0" text="Save Font" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-      <Label layoutX="439.0" layoutY="243.0" text="Text preview:" AnchorPane.rightAnchor="278.0" AnchorPane.topAnchor="243.0" />
+      <Label layoutX="533.5" layoutY="247.0" text="Text preview:" AnchorPane.rightAnchor="278.0" AnchorPane.topAnchor="247.0" />
       <Label layoutX="542.0" layoutY="63.0" text="Char Width:" AnchorPane.rightAnchor="279.0" AnchorPane.topAnchor="63.0" />
       <Label layoutX="541.0" layoutY="116.0" text="Char Height:" AnchorPane.rightAnchor="276.0" AnchorPane.topAnchor="116.0" />
       <Label layoutX="541.0" layoutY="167.0" text="Vertical Offset:" AnchorPane.rightAnchor="265.0" AnchorPane.topAnchor="167.0" />
-      <ChoiceBox fx:id="fontsListView" layoutX="616.0" layoutY="29.0" prefHeight="25.0" prefWidth="251.0" AnchorPane.rightAnchor="17.0" AnchorPane.topAnchor="29.0" />
+      <ChoiceBox fx:id="fontsListView" layoutX="542.0" layoutY="31.0" prefHeight="25.0" prefWidth="251.0" AnchorPane.rightAnchor="91.0" AnchorPane.topAnchor="31.0" />
+      <Spinner fx:id="pixelFontZoomView" layoutX="543.0" layoutY="218.0" prefHeight="26.0" prefWidth="124.0" styleClass="arrows-on-right-horizontal" AnchorPane.rightAnchor="217.0" AnchorPane.topAnchor="218.0" />
+      <CheckBox fx:id="is2XSizeFontView" layoutX="813.0" layoutY="35.0" mnemonicParsing="false" text="2X" AnchorPane.rightAnchor="32.0" AnchorPane.topAnchor="35.0" />
    </children>
 </AnchorPane>

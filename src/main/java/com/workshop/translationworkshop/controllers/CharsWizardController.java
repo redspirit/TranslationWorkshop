@@ -10,10 +10,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyEvent;
@@ -36,6 +33,8 @@ public class CharsWizardController {
     public Canvas sampleCanvasView;
     public TextField textCharInfoView;
     public ChoiceBox<TTFData> fontsListView;
+    public Spinner<Integer> pixelFontZoomView = new Spinner<>();
+    public CheckBox is2XSizeFontView;
     private FontItem font;
     private TTFData localizeFont;
 
@@ -45,6 +44,12 @@ public class CharsWizardController {
             FontCharItem item = font.getCharItemByPosition((int)event.getX(), (int)event.getY());
             if(item == null) return;
             textCharInfoView.setText(item.letter + " " + item.code + " " + item.posX + " " + item.posY + " " + item.sizeX + " " + item.sizeY + " " + item.shift);
+        });
+
+
+        pixelFontZoomView.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,5, 1));
+        pixelFontZoomView.valueProperty().addListener((obs, oldValue, newValue) -> {
+            onSampleTextChange(null);
         });
 
 
@@ -91,7 +96,7 @@ public class CharsWizardController {
     }
 
     public void onSampleTextChange(KeyEvent keyEvent) {
-        font.getImageByString(sampleTextView.getText(), sampleCanvasView, 4);
+        font.getImageByString(sampleTextView.getText(), sampleCanvasView, pixelFontZoomView.getValue());
     }
 
     public void onApplyButton(ActionEvent actionEvent) {
@@ -102,12 +107,14 @@ public class CharsWizardController {
         font.customScaleY = sliderHeightView.getValue() / 100;;
         font.customOffsetY = sliderOffsetView.getValue() / 100;
 
-        boolean done = font.addNewChars(localizeFont, charsetTextView.getText());
+
+        boolean is2XFont = is2XSizeFontView.isSelected();
+        boolean done = font.addNewChars(localizeFont, charsetTextView.getText(), is2XFont);
         if(!done) {
 
             font.reset();
             font.modPage.extendSprite();
-            font.addNewChars(localizeFont, charsetTextView.getText());
+            font.addNewChars(localizeFont, charsetTextView.getText(), is2XFont);
 
         }
 

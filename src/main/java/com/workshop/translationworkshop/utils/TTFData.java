@@ -11,7 +11,7 @@ import java.util.List;
 
 public class TTFData {
 
-    public Font font;
+    public Font font, font2x;
     public String name, fileName;
     public boolean isPixelFont = false;
     public int glyphShift = 0;
@@ -28,6 +28,10 @@ public class TTFData {
                 Application.class.getResource("fonts/" + filename).toExternalForm(),
                 size
         );
+        this.font2x = Font.loadFont(
+                Application.class.getResource("fonts/" + filename).toExternalForm(),
+                size * 2
+        );
         this.name = this.font.getName();
         this.isPixelFont = true;
     }
@@ -40,7 +44,16 @@ public class TTFData {
     static public List<TTFData> fonts = new ArrayList<>();
 
     // это названия тех шрифтов, которые считаются пиксельными
-    static private String[] pixelFontNames = {"cc.yal.7w7.ttf", "cc.yal.6w4.ttf", "Nanoscript.ttf"};
+    static private String[] pixelFontNames = {
+            "cc.yal.7w7.ttf",
+            "cc.yal.6w4.ttf",
+            "Nanoscript.ttf",
+            "Tensticks.ttf",
+            "Picoscript.ttf",
+            "picoscriptbolt.ttf",
+            "comic-sans-ms-pixel-rus-eng.ttf",
+            "Determination_mono.otf"                // тут не 16 а другое число
+    };
 
     static public void loadTTFFonts() {
 
